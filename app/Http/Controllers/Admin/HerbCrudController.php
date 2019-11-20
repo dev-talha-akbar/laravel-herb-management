@@ -51,8 +51,30 @@ class HerbCrudController extends CrudController
 
     protected function setupListOperation()
     {
-        // TODO: remove setFromDb() and manually define Columns, maybe Filters
-        $this->crud->setFromDb();
+        $this->crud->addColumn([
+            'name' => 'chinese_name',
+            'label' => 'Chinese Name'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'english_name',
+            'label' => 'English Name'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'pharmaceutical_name',
+            'label' => 'Pharmaceutical Name'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'literal_name',
+            'label' => 'Literal Name'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'dosage_with_unit',
+            'label' => 'Dosage'
+        ]);
     }
 
     protected function setupCreateOperation()

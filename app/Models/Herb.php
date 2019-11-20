@@ -124,6 +124,11 @@ class Herb extends Model
         return $this->dosage_start . '-' . $this->dosage_end;
     }
 
+    public function getDosageWithUnitAttribute()
+    {
+        return $this->dosage_start . $this->dosage_unit . '-' . $this->dosage_end . $this->dosage_unit;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | MUTATORS
