@@ -28,6 +28,12 @@ class Herb extends Model
     protected $casts = [
         'constituent_images' => 'array'
     ];
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['dosage', 'dosage_with_unit'];
 
     /*
     |--------------------------------------------------------------------------
@@ -46,7 +52,7 @@ class Herb extends Model
      */
     public function items()
     {
-        return $this->morphToMany('App\Models\Item', 'itemable');
+        return $this->morphToMany('App\Models\Item', 'itemable')->withTimestamps();
     }
 
     public function categories()

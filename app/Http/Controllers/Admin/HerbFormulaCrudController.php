@@ -42,6 +42,7 @@ class HerbFormulaCrudController extends CrudController
         $this->crud->setModel('App\Models\HerbFormula');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/herb-formula');
         $this->crud->setEntityNameStrings('herb formula', 'herb formulas');
+        $this->crud->with('herbs');
     }
 
     protected function setupListOperation()
@@ -50,7 +51,7 @@ class HerbFormulaCrudController extends CrudController
         $this->crud->setFromDb();
     }
 
-    protected function setupCreateOperation()
+    protected function setupCreateOperation($id = null)
     {
         $this->crud->setValidation(HerbFormulaRequest::class);
 
@@ -66,19 +67,24 @@ class HerbFormulaCrudController extends CrudController
             'tab' => 'Basic',
         ]);
 
-        $this->crud->addField([
+        $herb_selection = [
             'label'     => 'Herbs in Formula',
-            'type'      => 'itemable',
+            'type'      => 'herb-selection',
             'name'      => 'herbs',
             'entity'    => 'herbs',
             'attribute' => 'english_name',
             'model'     => "App\Models\Herb",
-            'pivot'     => true,
             'options'   => (function ($query) {
                 return $query->orderBy('english_name', 'ASC')->get();
             }),
             'tab' => 'Herbs',
-        ]);
+        ];
+
+        if ($id !== null) {
+            $herb_selection['id'] = $id;
+        }
+
+        $this->crud->addField($herb_selection);
 
         foreach ($this->itemableTypes as $type) {
             $this->crud->addField([
@@ -99,20 +105,67 @@ class HerbFormulaCrudController extends CrudController
 
     protected function setupUpdateOperation()
     {
-        $this->setupCreateOperation();
+        $this->setupCreateOperation(intval(\Route::current()->parameter('id')));
     }
 
     public function store()
     {
+        $this->crud->validateRequest();
+
+        list($herbs, $dosages) = $this->stripHerbsDosages();
+
         $this->withNonExistingItems();
 
-        return $this->traitStore();
+        $response = $this->traitStore();
+
+        $this->syncHerbs($herbs, $dosages);
+
+        return $response;
     }
 
     public function update()
     {
+        $this->crud->validateRequest();
+
+        list($herbs, $dosages) = $this->stripHerbsDosages();
+
         $this->withNonExistingItems();
 
-        return $this->traitUpdate();
+        $response = $this->traitUpdate();
+
+        $this->syncHerbs($herbs, $dosages);
+
+        return $response;
+    }
+
+    private function stripHerbsDosages()
+    {
+        $request = $this->crud->request;
+
+        $herbs = [];
+        $dosages = [];
+
+        if ($request->herbs && $request->herb_dosage) {
+            $herbs = array_merge($herbs, $request->herbs);
+            $dosages = array_merge($dosages, $request->herb_dosage);
+        }
+
+        $request->replace($request->except(['herbs', 'herb_dosage']));
+
+        return [$herbs, $dosages];
+    }
+
+    private function syncHerbs($herbs, $dosages)
+    {
+        $formula = $this->crud->entry;
+        $pivotedHerbs = [];
+
+        foreach ($herbs as $i => $herb) {
+            $pivotedHerbs[$herb] = [
+                'dosage' => $dosages[$i]
+            ];
+        }
+
+        $formula->herbs()->sync($pivotedHerbs);
     }
 }

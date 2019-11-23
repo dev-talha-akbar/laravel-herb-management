@@ -19,7 +19,7 @@ class HerbFormula extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    protected $fillable = ['chinese_name', 'english_name'];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -42,12 +42,12 @@ class HerbFormula extends Model
             'herb_formula_herb',
             'herb_formula_id',
             'herb_id'
-        );
+        )->withPivot('dosage', 'dosage_unit')->withTimestamps();
     }
 
     public function items()
     {
-        return $this->morphToMany('App\Models\Item', 'itemable');
+        return $this->morphToMany('App\Models\Item', 'itemable')->withTimestamps();
     }
 
     public function categories()

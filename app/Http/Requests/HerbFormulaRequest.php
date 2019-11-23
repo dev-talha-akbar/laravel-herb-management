@@ -26,7 +26,8 @@ class HerbFormulaRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'chinese_name' => 'required|max:191',
+            'english_name' => 'required|max:191'
         ];
     }
 

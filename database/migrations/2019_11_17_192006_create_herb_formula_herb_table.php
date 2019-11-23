@@ -16,6 +16,8 @@ class CreateHerbFormulaHerbTable extends Migration
         Schema::create('herb_formula_herb', function (Blueprint $table) {
             $table->unsignedBigInteger('herb_formula_id');
             $table->unsignedBigInteger('herb_id');
+            $table->string('dosage');
+            $table->string('dosage_unit')->default('mg');
             $table->timestamps();
 
             $table->foreign('herb_formula_id')->references('id')->on('herb_formulas')->onDelete('cascade');
