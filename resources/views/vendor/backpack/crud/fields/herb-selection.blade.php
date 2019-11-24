@@ -6,7 +6,7 @@ $options = $field['model']::all();
 $options = call_user_func($field['options'], $field['model']::query());
 }
 if(isset($field['id'])) {
-$dosages = \DB::table('herb_formula_herb')->where('herb_formula_id', $field['id'])->get();
+$dosages = \App\Models\HerbsInFormula::where('herb_formula_id', $field['id'])->get();
 }
 $multiple = isset($field['multiple']) && $field['multiple']===false ? '': 'multiple';
 @endphp
@@ -128,7 +128,7 @@ $crud->markFieldTypeAsLoaded($field);
                 var herbs$ = herbs.forEach(function(herb, i) {
                     var herb$ = $(`
                         <div class="herb">
-                            <b>${herb.text}</b> (Dosage in mg)
+                            <b>${herb.text}</b> (Dosage in g)
                         </div>
                     `);
                     herbContainer$.append(herb$);

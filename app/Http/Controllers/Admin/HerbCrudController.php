@@ -134,7 +134,7 @@ class HerbCrudController extends CrudController
             'label' => 'Herb Image',
             'type' => 'upload',
             'upload' => true,
-            'disk' => 'public',
+            'disk' => 'dropbox',
             'tab' => 'Images'
         ]);
 
@@ -143,7 +143,7 @@ class HerbCrudController extends CrudController
             'label' => 'Constituent Images',
             'type' => 'upload_multiple',
             'upload' => true,
-            'disk' => 'public',
+            'disk' => 'dropbox',
             'tab' => 'Images'
         ]);
     }
@@ -162,6 +162,12 @@ class HerbCrudController extends CrudController
 
     public function update()
     {
+        $request = $this->crud->request;
+
+        if ($request->has('clear_herb_image')) {
+            $request->merge(['herb_image' => null]);
+        }
+
         $this->withNonExistingItems();
 
         return $this->traitUpdate();

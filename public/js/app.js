@@ -1900,31 +1900,88 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["data"],
   data: function data() {
-    return _objectSpread({}, this.data);
+    var _this = this;
+
+    var getItemsOfType = function getItemsOfType(type) {
+      return _this.data.items.filter(function (item) {
+        return item.type === type;
+      }).map(function (item) {
+        return item.value;
+      }).join(", ");
+    };
+
+    return _objectSpread({}, this.data, {
+      categories: getItemsOfType("categories"),
+      signs: getItemsOfType("signs_symptoms"),
+      properties: getItemsOfType("properties"),
+      systems_affected: getItemsOfType("systems_affected"),
+      actions: getItemsOfType("actions"),
+      chemical_composition: getItemsOfType("chemical_composition"),
+      pharmacology: getItemsOfType("pharmacology"),
+      antibiotic_strains: getItemsOfType("antibiotic_strains"),
+      hormones: getItemsOfType("hormones"),
+      herb_herb_interaction: getItemsOfType("herb_herb_interaction"),
+      herb_drug_interaction: getItemsOfType("herb_drug_interaction"),
+      toxicity_contraindications: getItemsOfType("toxicity_contraindications"),
+      view_more: false
+    });
   },
   mounted: function mounted() {
     console.log("Component mounted.");
   },
-  computed: {
-    categories: function categories() {
-      return this.items.filter(function (item) {
-        return item.type === "categories";
-      }).map(function (item) {
-        return item.value;
-      }).join(", ");
-    },
-    signs: function signs() {
-      return this.items.filter(function (item) {
-        return item.type === "signs_symptoms";
-      }).map(function (item) {
-        return item.value;
-      }).join(", ");
+  computed: {},
+  methods: {
+    viewToggle: function viewToggle() {
+      this.view_more = !this.view_more;
     }
-  },
-  methods: {}
+  }
 });
 
 /***/ }),
@@ -1989,31 +2046,67 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["data"],
   data: function data() {
-    return _objectSpread({}, this.data);
+    var _this = this;
+
+    var getItemsOfType = function getItemsOfType(type) {
+      return _this.data.items.filter(function (item) {
+        return item.type === type;
+      }).map(function (item) {
+        return item.value;
+      }).join(", ");
+    };
+
+    return _objectSpread({}, this.data, {
+      categories: getItemsOfType("categories"),
+      signs: getItemsOfType("signs_symptoms"),
+      formula_diagnosis: getItemsOfType("formula_diagnosis"),
+      tongue_diagnosis: getItemsOfType("tongue_diagnosis"),
+      pulse_diagnosis: getItemsOfType("pulse_diagnosis"),
+      formula_actions: getItemsOfType("formula_actions"),
+      herb_drug_interaction: getItemsOfType("herb_drug_interaction"),
+      toxicity_contraindications: getItemsOfType("toxicity_contraindications"),
+      view_more: false
+    });
   },
   mounted: function mounted() {
     console.log("Component mounted.");
   },
-  computed: {
-    categories: function categories() {
-      return this.items.filter(function (item) {
-        return item.type === "categories";
-      }).map(function (item) {
-        return item.value;
-      }).join(", ");
-    },
-    signs: function signs() {
-      return this.items.filter(function (item) {
-        return item.type === "signs_symptoms";
-      }).map(function (item) {
-        return item.value;
-      }).join(", ");
+  methods: {
+    viewToggle: function viewToggle() {
+      this.view_more = !this.view_more;
     }
-  },
-  methods: {}
+  }
 });
 
 /***/ }),
@@ -2172,13 +2265,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue2_transitions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue2-transitions */ "./node_modules/vue2-transitions/dist/vue2-transitions.m.js");
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -6691,7 +6777,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".herb[data-v-7e048858] {\n  margin-bottom: 10px;\n}\n.herb .herbdetails[data-v-7e048858] {\n  margin-left: -5px;\n}\n.herb .formulatag[data-v-7e048858] {\n  font-weight: normal;\n  position: relative;\n  top: -1px;\n}\n.herb .herbconstituents[data-v-7e048858] {\n  margin-top: 5px;\n}\n.herb .herbconstituents .herbconstituentimages[data-v-7e048858] {\n  margin: 0 -4px;\n  display: -webkit-box;\n  display: flex;\n}\n.herb .constituent[data-v-7e048858] {\n  margin: 4px;\n}\n.herb .constituent img[data-v-7e048858] {\n  width: 28px;\n  height: 28px;\n}", ""]);
+exports.push([module.i, ".herb .herbdetails[data-v-7e048858] {\n  margin-left: -5px;\n}\n.herb .formulatag[data-v-7e048858] {\n  font-weight: normal;\n  position: relative;\n  top: -1px;\n}\n.herb .herbconstituents[data-v-7e048858] {\n  margin-top: 5px;\n}\n.herb .herbconstituents .herbconstituentimages[data-v-7e048858] {\n  margin: 0 -4px;\n  display: -webkit-box;\n  display: flex;\n}\n.herb .constituent[data-v-7e048858] {\n  margin: 4px;\n}\n.herb .constituent img[data-v-7e048858] {\n  width: 28px;\n  height: 28px;\n}", ""]);
 
 // exports
 
@@ -6710,7 +6796,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".herbformula[data-v-7f56bb1e] {\n  margin-bottom: 10px;\n}\n.herbformula .formuladetails[data-v-7f56bb1e] {\n  margin-left: -5px;\n}\n.herbformula .formulatag[data-v-7f56bb1e] {\n  font-weight: normal;\n  position: relative;\n  top: -1px;\n}\n.herbformula .herbsused[data-v-7f56bb1e] {\n  margin-top: 5px;\n}\n.herbformula .herbsused .herbsusedimages[data-v-7f56bb1e] {\n  margin: 0 -4px;\n  display: -webkit-box;\n  display: flex;\n}\n.herbformula .herb[data-v-7f56bb1e] {\n  display: -webkit-box;\n  display: flex;\n  font-size: 11px;\n  margin: 4px;\n}\n.herbformula .herb img[data-v-7f56bb1e] {\n  width: 32px;\n  height: 32px;\n  margin-right: 4px;\n}", ""]);
+exports.push([module.i, ".herbformula .formuladetails[data-v-7f56bb1e] {\n  margin-left: -5px;\n}\n.herbformula .formulatag[data-v-7f56bb1e] {\n  font-weight: normal;\n  position: relative;\n  top: -1px;\n}\n.herbformula .herbsused[data-v-7f56bb1e] {\n  margin-top: 5px;\n}\n.herbformula .herbsused .herbsusedimages[data-v-7f56bb1e] {\n  margin: 0 -4px;\n  display: -webkit-box;\n  display: flex;\n}\n.herbformula .herb[data-v-7f56bb1e] {\n  display: -webkit-box;\n  display: flex;\n  font-size: 11px;\n  margin: 4px;\n}\n.herbformula .herb img[data-v-7f56bb1e] {\n  width: 32px;\n  height: 32px;\n  margin-right: 4px;\n}\n.herbformula .herb img[src=\"/img/no-preview.png\"][data-v-7f56bb1e] {\n  border: 1px solid #ccc;\n}", ""]);
 
 // exports
 
@@ -6748,7 +6834,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".searchresults[data-v-6db515d3] {\n  padding: 50px 0 0 0;\n}\n.noresults[data-v-6db515d3] {\n  color: #b5bec7;\n  text-align: center;\n}", ""]);
+exports.push([module.i, ".card[data-v-6db515d3] {\n  margin-bottom: 20px;\n}\n.searchresults[data-v-6db515d3] {\n  padding: 50px 0 0 0;\n}\n.noresults[data-v-6db515d3] {\n  color: #b5bec7;\n  text-align: center;\n}", ""]);
 
 // exports
 
@@ -38381,8 +38467,88 @@ var render = function() {
               _c("tr", [
                 _c("th", [_vm._v("Dosage")]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.dosage))])
-              ])
+                _c("td", [_vm._v(_vm._s(_vm.dosage_with_unit))])
+              ]),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Properties")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.properties))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Systems Affected")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.systems_affected))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Actions")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.actions))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Chemicial Composition")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.chemical_composition))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Pharmacology")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.pharmacology))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Antibiotic Strains")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.antibiotic_strains))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Hormones")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.hormones))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Herb-Herb Interaction")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.herb_herb_interaction))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Herb-Drug Interaction")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.herb_drug_interaction))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Toxicity / Contraindications")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.toxicity_contraindications))])
+                  ])
+                : _vm._e()
             ])
           ]
         )
@@ -38395,11 +38561,11 @@ var render = function() {
           _c(
             "div",
             { staticClass: "flex herbconstituentimages" },
-            _vm._l(_vm.constituent_images, function(constituent) {
+            _vm._l(_vm.dropbox_constituent_images, function(constituent) {
               return _c(
                 "div",
                 { key: constituent, staticClass: "constituent" },
-                [_c("img", { attrs: { src: "/storage/" + constituent } })]
+                [_c("img", { attrs: { src: constituent } })]
               )
             }),
             0
@@ -38408,9 +38574,19 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-      _vm._v("View Details")
-    ])
+    _c(
+      "a",
+      {
+        staticClass: "card-link",
+        attrs: { href: "javascript:void(0)" },
+        on: {
+          click: function($event) {
+            return _vm.viewToggle()
+          }
+        }
+      },
+      [_vm._v("View " + _vm._s(_vm.view_more ? "Less" : "More"))]
+    )
   ])
 }
 var staticRenderFns = []
@@ -38467,7 +38643,55 @@ var render = function() {
                 _c("th", [_vm._v("Category")]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(_vm.categories))])
-              ])
+              ]),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Formula Diagnosis")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.formula_diagnosis))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Tongue Diagnosis")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.tongue_diagnosis))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Pulse Diagnosis")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.pulse_diagnosis))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Formula Actions")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.formula_actions))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Herb-Drug Interaction")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.herb_drug_interaction))])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.view_more
+                ? _c("tr", [
+                    _c("th", [_vm._v("Toxicity / Contraindications")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.toxicity_contraindications))])
+                  ])
+                : _vm._e()
             ])
           ]
         )
@@ -38482,7 +38706,13 @@ var render = function() {
             { staticClass: "flex herbsusedimages" },
             _vm._l(_vm.herbs, function(herb) {
               return _c("div", { key: herb.id, staticClass: "herb" }, [
-                _c("img", { attrs: { src: "/storage/" + herb.herb_image } }),
+                _c("img", {
+                  attrs: {
+                    src: herb.dropbox_herb_image
+                      ? herb.dropbox_herb_image
+                      : "/img/no-preview.png"
+                  }
+                }),
                 _vm._v(" "),
                 _c("div", { staticClass: "herbdetails" }, [
                   _c("b", [_vm._v(_vm._s(herb.english_name))]),
@@ -38490,7 +38720,7 @@ var render = function() {
                   _c("br"),
                   _vm._v(
                     "\n              " +
-                      _vm._s(herb.dosage_with_unit) +
+                      _vm._s(herb.pivot.dosage_with_unit) +
                       "\n            "
                   )
                 ])
@@ -38502,9 +38732,19 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("a", { staticClass: "card-link", attrs: { href: "#" } }, [
-      _vm._v("View Details")
-    ])
+    _c(
+      "a",
+      {
+        staticClass: "card-link",
+        attrs: { href: "javascript:void(0)" },
+        on: {
+          click: function($event) {
+            return _vm.viewToggle()
+          }
+        }
+      },
+      [_vm._v("View " + _vm._s(_vm.view_more ? "Less" : "More"))]
+    )
   ])
 }
 var staticRenderFns = []

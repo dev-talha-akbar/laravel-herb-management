@@ -42,7 +42,7 @@ class HerbFormula extends Model
             'herb_formula_herb',
             'herb_formula_id',
             'herb_id'
-        )->withPivot('dosage', 'dosage_unit')->withTimestamps();
+        )->using('App\Models\HerbsInFormula')->withPivot('dosage_start', 'dosage_end', 'dosage_unit')->withTimestamps();
     }
 
     public function items()

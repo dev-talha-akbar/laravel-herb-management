@@ -23,17 +23,14 @@ class Herb extends Model
     // protected $hidden = [];
     // protected $dates = [];
     protected $attributes = [
-        'dosage_unit' => 'mg',
-    ];
-    protected $casts = [
-        'constituent_images' => 'array'
+        'dosage_unit' => 'g',
     ];
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $appends = ['dosage', 'dosage_with_unit'];
+    protected $appends = ['dosage', 'dosage_with_unit', 'dropbox_herb_image', 'dropbox_constituent_images'];
 
     /*
     |--------------------------------------------------------------------------
@@ -147,10 +144,29 @@ class Herb extends Model
         $this->dosage_end = $dosage_end;
     }
 
+    public function getDropboxHerbImageAttribute()
+    {
+        if ($this->attributes['herb_image']) {
+            return \Storage::disk('dropbox')->url($this->attributes['herb_image']);
+        } else {
+            return null;
+        }
+    }
+
+    public function getDropboxConstituentImagesAttribute()
+    {
+        $constituent_images = json_decode($this->attributes['constituent_images']);
+
+        return array_map(function ($image) {
+            return \Storage::disk('dropbox')->url($image);
+        }, $constituent_images);
+    }
+
+
     public function setHerbImageAttribute($value)
     {
         $attribute_name = "herb_image";
-        $disk = "public";
+        $disk = "dropbox";
         $destination_path = "herbs";
 
         $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
@@ -159,7 +175,7 @@ class Herb extends Model
     public function setConstituentImagesAttribute($value)
     {
         $attribute_name = "constituent_images";
-        $disk = "public";
+        $disk = "dropbox";
         $destination_path = "constituents";
 
         $this->uploadMultipleFilesToDisk($value, $attribute_name, $disk, $destination_path);
