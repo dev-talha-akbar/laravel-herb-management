@@ -13,7 +13,7 @@
     <link rel="preload" href="/img/logo-sm.png" as="image">
     <link rel="preload" href="/img/preloader.gif" as="image">
     <link rel="preload" href="/img/no-preview.png" as="image">
-    <link rel="preload" href="/img/no-results.png" as="image">
+    <link rel="preload" href="/img/no-results.jpg" as="image">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">

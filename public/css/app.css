@@ -11105,3 +11105,8 @@ a.text-dark:focus {
   top: -2px;
 }
 
+body.scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+

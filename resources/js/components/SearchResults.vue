@@ -15,6 +15,7 @@
         </zoom-center-transition>
       </template>
       <template v-if="results.length > 0">
+        <h2>{{ results.length }} Total Results</h2>
         <fade-transition group>
           <div class="card" v-for="result in results" :key="result.id">
             <div class="card-body">

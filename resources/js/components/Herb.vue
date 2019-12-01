@@ -1,6 +1,9 @@
 <template>
   <div class="herb">
-    <h5 class="card-title">{{ english_name }}</h5>
+    <h5 class="card-title">
+      {{ english_name }}
+      <span class="badge badge-info">{{ signs_symptoms_count }} Signs Matched</span>
+    </h5>
     <div class="row">
       <div class="col-7">
         <table class="herbdetails table table-borderless table-sm">
@@ -95,7 +98,7 @@
       href="javascript:void(0)"
       class="card-link"
       @click="viewToggle()"
-    >View {{ view_more ? 'Less' : 'More' }}</a>
+    >View {{ view_more ? "Less" : "More" }}</a>
   </div>
 </template>
 <script>

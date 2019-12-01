@@ -34,9 +34,17 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function signs()
+    public function options()
     {
-        return response()->json(Item::where('type', 'signs_symptoms')->get());
+        $options = Item::whereIn('type', [
+            'signs_symptoms',
+            'hormones',
+            'chemical_composition',
+            'pharmacology',
+            'antibiotic_strains'
+        ])->get();
+
+        return response()->json($options->groupBy('type'));
     }
 
     /**
@@ -47,17 +55,51 @@ class HomeController extends Controller
     public function search(Request $request)
     {
         $signs = $request->signs;
+        $hormones = $request->hormones;
+        $chemicalComposition = $request->chemicalComposition;
+        $pharmacology = $request->pharmacology;
+        $antibioticStrains = $request->antibioticStrains;
+        $advancedSearch = $request->advancedSearch;
         $results = null;
+        $typeClass = $request->type === 'Herb' ? Herb::class : HerbFormula::class;
 
-        if ($request->type === 'Herb') {
-            $results = Herb::whereHas('signs_symptoms', function ($q) use ($signs) {
-                $q->whereIn('id', $signs);
-            })->with('items')->get();
-        } else if ($request->type === 'Herb Formula') {
-            $results = HerbFormula::whereHas('signs_symptoms', function ($q) use ($signs) {
-                $q->whereIn('id', $signs);
-            })->with('herbs')->with('items')->get();
+        $results = $typeClass::withCount(['signs_symptoms' => function ($q) use ($signs) {
+            $q->whereIn('id', $signs);
+        }]);
+
+        if ($advancedSearch) {
+            if (count($hormones) > 0) {
+                $results = $results
+                    ->whereHas('hormones', function ($q) use ($hormones) {
+                        $q->whereIn('id', $hormones);
+                    });
+            }
+
+            if (count($chemicalComposition) > 0) {
+                $results = $results
+                    ->whereHas('chemical_composition', function ($q) use ($chemicalComposition) {
+                        $q->whereIn('id', $chemicalComposition);
+                    });
+            }
+
+            if (count($pharmacology) > 0) {
+                $results = $results->whereHas('pharmacology', function ($q) use ($pharmacology) {
+                    $q->whereIn('id', $pharmacology);
+                });
+            }
+
+            if (count($antibioticStrains) > 0) {
+                $results = $results->whereHas('antibiotic_strains', function ($q) use ($antibioticStrains) {
+                    $q->whereIn('id', $antibioticStrains);
+                });
+            }
         }
+
+        if ($request->type === 'Herb Formula') {
+            $results = $results->with('herbs');
+        }
+
+        $results = $results->with('items')->having('signs_symptoms_count', '>', 0)->orderBy('signs_symptoms_count', 'desc')->get();
 
         return response()->json($results);
     }

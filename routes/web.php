@@ -14,5 +14,5 @@
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
-Route::get('/signs', 'HomeController@signs');
+Route::get('/options', 'HomeController@options');
 Route::post('/search', 'HomeController@search');

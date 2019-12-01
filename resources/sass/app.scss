@@ -12,3 +12,8 @@
     position: relative;
     top: -2px;
 }
+
+body.scroll {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
