@@ -65,7 +65,9 @@ class HomeController extends Controller
 
         $results = $typeClass::withCount(['signs_symptoms' => function ($q) use ($signs) {
             $q->whereIn('id', $signs);
-        }]);
+        }])->whereHas('signs_symptoms', function ($q) use ($signs) {
+            $q->whereIn('id', $signs);
+        });
 
         if ($advancedSearch) {
             if (count($hormones) > 0) {
@@ -99,7 +101,7 @@ class HomeController extends Controller
             $results = $results->with('herbs');
         }
 
-        $results = $results->with('items')->having('signs_symptoms_count', '>', 0)->orderBy('signs_symptoms_count', 'desc')->get();
+        $results = $results->with('items')->orderBy('signs_symptoms_count', 'desc')->get();
 
         return response()->json($results);
     }
