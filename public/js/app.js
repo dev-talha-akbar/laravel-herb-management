@@ -39095,7 +39095,7 @@ var render = function() {
               },
               on: {
                 input: function($event) {
-                  return _vm.$emit("pharmacologyUpdate", $event)
+                  return _vm.$emit("pharmacologyUpdated", $event)
                 }
               }
             }),

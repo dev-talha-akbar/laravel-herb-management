@@ -52,7 +52,7 @@
         multiple
         :options="pharmacology"
         :value="selectedPharmacology"
-        @input="$emit('pharmacologyUpdate', $event)"
+        @input="$emit('pharmacologyUpdated', $event)"
         class="searchinput"
         :getOptionLabel="getOptionLabel"
         :getOptionKey="getOptionKey"
