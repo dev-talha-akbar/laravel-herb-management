@@ -29,7 +29,7 @@ class CreateUsersTable extends Migration
         $user = BackpackUser::create([
             'name' => 'Super Admin',
             'email' => 'admin@wholesome.com',
-            'password' => Hash::make('admin123'),
+            'password' => 'admin123'
         ]);
 
         $user->assignRole('Super Admin');
