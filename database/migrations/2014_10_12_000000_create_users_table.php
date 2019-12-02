@@ -3,6 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Hash;
+
+use App\Models\BackpackUser;
 
 class CreateUsersTable extends Migration
 {
@@ -22,6 +25,14 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        $user = BackpackUser::create([
+            'name' => 'Super Admin',
+            'email' => 'admin@wholesome.com',
+            'password' => Hash::make('admin123'),
+        ]);
+
+        $user->assignRole('Super Admin');
     }
 
     /**

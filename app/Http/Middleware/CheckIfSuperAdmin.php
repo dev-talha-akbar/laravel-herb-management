@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class CheckIfAdmin
+class CheckIfSuperAdmin
 {
     /**
      * Checked that the logged in user is an administrator.
@@ -22,7 +22,7 @@ class CheckIfAdmin
      */
     private function checkIfUserIsAdmin($user)
     {
-        return $user->hasRole('Admin') || $user->hasRole('Super Admin');
+        return $user->hasRole('Super Admin');
     }
 
     /**
