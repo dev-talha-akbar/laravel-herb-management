@@ -77,7 +77,7 @@ class HerbCrudController extends CrudController
         ]);
     }
 
-    protected function setupCreateOperation()
+    protected function setupCreateOperation($id = null)
     {
         $this->crud->setValidation(HerbRequest::class);
 
@@ -113,6 +113,29 @@ class HerbCrudController extends CrudController
             'tab' => 'Basic'
         ]);
 
+        $this->crud->addField([   // Number
+            'name' => 'max_dosage',
+            'label' => 'Maximum Dosage (g)',
+            'type' => 'number',
+            'tab' => 'Basic',
+            // optionals
+            'attributes' => ["step" => "any"], // allow decimals
+            // 'prefix' => "$",
+            // 'suffix' => ".00",
+        ]);
+
+        $this->crud->addField([   // radio
+            'name'        => 'usage', // the name of the db column
+            'label'       => 'Administered', // the input label
+            'type'        => 'radio',
+            'options'     => [
+                0 => "Both Orally and Topically",
+                1 => "Orally",
+                2 => "Topically"
+            ],
+            'tab' => 'Basic'
+        ]);
+
         foreach ($this->itemableTypes as $type) {
             $this->crud->addField([
                 'label'     => $type[0],
@@ -128,6 +151,25 @@ class HerbCrudController extends CrudController
                 'tab' => $type[1] !== 'categories' ? 'Details' : 'Basic',
             ]);
         }
+
+        $herb_selection = [
+            'label'     => 'Found in Formulas',
+            'type'      => 'herb-selection',
+            'name'      => 'formulas',
+            'entity'    => 'formulas',
+            'attribute' => 'english_name',
+            'model'     => "App\Models\HerbFormula",
+            'options'   => (function ($query) {
+                return $query->orderBy('english_name', 'ASC')->get();
+            }),
+            'tab' => 'Formulas Found In',
+        ];
+
+        if ($id !== null) {
+            $herb_selection['id'] = $id;
+        }
+
+        $this->crud->addField($herb_selection);
 
         $this->crud->addField([
             'name' => 'herb_image',
@@ -150,18 +192,30 @@ class HerbCrudController extends CrudController
 
     protected function setupUpdateOperation()
     {
-        $this->setupCreateOperation();
+        $this->setupCreateOperation(intval(\Route::current()->parameter('id')));
     }
 
     public function store()
     {
+        $this->crud->validateRequest();
+
+        list($formulas, $dosages) = $this->stripFormulasDosages();
+
         $this->withNonExistingItems();
 
-        return $this->traitStore();
+        $response = $this->traitStore();
+
+        $this->syncFormulas($formulas, $dosages);
+
+        return $response;
     }
 
     public function update()
     {
+        $this->crud->validateRequest();
+
+        list($formulas, $dosages) = $this->stripFormulasDosages();
+
         $request = $this->crud->request;
 
         if ($request->has('clear_herb_image')) {
@@ -170,6 +224,41 @@ class HerbCrudController extends CrudController
 
         $this->withNonExistingItems();
 
-        return $this->traitUpdate();
+        $response = $this->traitUpdate();
+
+        $this->syncFormulas($formulas, $dosages);
+
+        return $response;
+    }
+
+    private function stripFormulasDosages()
+    {
+        $request = $this->crud->request;
+
+        $formulas = [];
+        $dosages = [];
+
+        if ($request->formulas && $request->herb_dosage) {
+            $formulas = array_merge($formulas, $request->formulas);
+            $dosages = array_merge($dosages, $request->herb_dosage);
+        }
+
+        $request->replace($request->except(['formulas', 'herb_dosage']));
+
+        return [$formulas, $dosages];
+    }
+
+    private function syncFormulas($formulas, $dosages)
+    {
+        $herb = $this->crud->entry;
+        $pivotedFormulas = [];
+
+        foreach ($formulas as $i => $formula) {
+            $pivotedFormulas[$formula] = [
+                'dosage' => $dosages[$i]
+            ];
+        }
+
+        $herb->formulas()->sync($pivotedFormulas);
     }
 }

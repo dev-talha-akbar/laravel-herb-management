@@ -34,7 +34,15 @@
             </tr>
             <tr>
               <th>Dosage</th>
-              <td>{{ dosage_with_unit }}</td>
+              <td>{{ dosage_with_unit }} (Maximum: {{ max_dosage }}g)</td>
+            </tr>
+            <tr>
+              <th>Administered</th>
+              <td>{{ usage_label }}</td>
+            </tr>
+            <tr>
+              <th>Formulas Found In</th>
+              <td>{{ formulas.map(formula => formula.english_name).join(', ') }}</td>
             </tr>
             <tr v-if="view_more">
               <th>Properties</th>
@@ -81,7 +89,9 @@
       </div>
       <div class="col-5">
         <div class="herbconstituents">
-          <b>Chemical Constituents of this herb</b>
+          <div class="flex justify-content-end">
+            <img width="64" :src="dropbox_herb_image" />
+          </div>
           <div class="flex herbconstituentimages">
             <div
               class="constituent"
@@ -126,6 +136,14 @@ export default {
       herb_herb_interaction: getItemsOfType("herb_herb_interaction"),
       herb_drug_interaction: getItemsOfType("herb_drug_interaction"),
       toxicity_contraindications: getItemsOfType("toxicity_contraindications"),
+      usage_label:
+        this.data.usage !== null
+          ? this.data.usage === 0
+            ? "Both Orally and Topically"
+            : this.data.usage === 1
+            ? "Orally"
+            : this.data.usage === "Topically"
+          : "Not Known",
       view_more: false
     };
   },

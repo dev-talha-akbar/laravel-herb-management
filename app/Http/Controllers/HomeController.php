@@ -99,6 +99,8 @@ class HomeController extends Controller
 
         if ($request->type === 'Herb Formula') {
             $results = $results->with('herbs');
+        } else if ($request->type === 'Herb') {
+            $results = $results->with('formulas');
         }
 
         $results = $results->with('items')->orderBy('signs_symptoms_count', 'desc')->get();

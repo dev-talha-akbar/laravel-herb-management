@@ -10,7 +10,7 @@
         <zoom-center-transition>
           <div>
             <h2 class="noresults">Nothing to show just yet</h2>
-            <img src="/img/no-results.jpg" width="100%" />
+            <img class="noresults-img" src="/img/no-results.svg" width="300" />
           </div>
         </zoom-center-transition>
       </template>
@@ -36,8 +36,12 @@
   padding: 50px 0 0 0;
 }
 .noresults {
-  color: #b5bec7;
+  color: #5acfb2;
   text-align: center;
+}
+.noresults + img {
+  margin: auto;
+  display: block;
 }
 </style>
 <script>

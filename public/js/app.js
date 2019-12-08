@@ -1947,6 +1947,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["data"],
   data: function data() {
@@ -1973,6 +1983,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       herb_herb_interaction: getItemsOfType("herb_herb_interaction"),
       herb_drug_interaction: getItemsOfType("herb_drug_interaction"),
       toxicity_contraindications: getItemsOfType("toxicity_contraindications"),
+      usage_label: this.data.usage !== null ? this.data.usage === 0 ? "Both Orally and Topically" : this.data.usage === 1 ? "Orally" : this.data.usage === "Topically" : "Not Known",
       view_more: false
     });
   },
@@ -2396,6 +2407,10 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue2_transitions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue2-transitions */ "./node_modules/vue2-transitions/dist/vue2-transitions.m.js");
+//
+//
+//
+//
 //
 //
 //
@@ -6966,7 +6981,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".card[data-v-6db515d3] {\n  margin-bottom: 20px;\n}\n.searchresults[data-v-6db515d3] {\n  padding: 50px 0 0 0;\n}\n.noresults[data-v-6db515d3] {\n  color: #b5bec7;\n  text-align: center;\n}", ""]);
+exports.push([module.i, ".card[data-v-6db515d3] {\n  margin-bottom: 20px;\n}\n.searchresults[data-v-6db515d3] {\n  padding: 50px 0 0 0;\n}\n.noresults[data-v-6db515d3] {\n  color: #5acfb2;\n  text-align: center;\n}\n.noresults + img[data-v-6db515d3] {\n  margin: auto;\n  display: block;\n}", ""]);
 
 // exports
 
@@ -38604,7 +38619,36 @@ var render = function() {
               _c("tr", [
                 _c("th", [_vm._v("Dosage")]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.dosage_with_unit))])
+                _c("td", [
+                  _vm._v(
+                    _vm._s(_vm.dosage_with_unit) +
+                      " (Maximum: " +
+                      _vm._s(_vm.max_dosage) +
+                      "g)"
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("tr", [
+                _c("th", [_vm._v("Administered")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(_vm.usage_label))])
+              ]),
+              _vm._v(" "),
+              _c("tr", [
+                _c("th", [_vm._v("Formulas Found In")]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    _vm._s(
+                      _vm.formulas
+                        .map(function(formula) {
+                          return formula.english_name
+                        })
+                        .join(", ")
+                    )
+                  )
+                ])
               ]),
               _vm._v(" "),
               _vm.view_more
@@ -38693,7 +38737,9 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "col-5" }, [
         _c("div", { staticClass: "herbconstituents" }, [
-          _c("b", [_vm._v("Chemical Constituents of this herb")]),
+          _c("div", { staticClass: "flex justify-content-end" }, [
+            _c("img", { attrs: { width: "64", src: _vm.dropbox_herb_image } })
+          ]),
           _vm._v(" "),
           _c(
             "div",
@@ -39171,7 +39217,8 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("img", {
-                        attrs: { src: "/img/no-results.jpg", width: "100%" }
+                        staticClass: "noresults-img",
+                        attrs: { src: "/img/no-results.svg", width: "300" }
                       })
                     ])
                   ])

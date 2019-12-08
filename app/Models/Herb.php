@@ -111,6 +111,16 @@ class Herb extends Model
     {
         return $this->items()->where('type', 'toxicity_contraindications');
     }
+
+    public function formulas()
+    {
+        return $this->belongsToMany(
+            'App\Models\HerbFormula',
+            'herb_formula_herb',
+            'herb_id',
+            'herb_formula_id'
+        )->using('App\Models\HerbsInFormula')->withPivot('dosage_start', 'dosage_end', 'dosage_unit')->withTimestamps();
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES
