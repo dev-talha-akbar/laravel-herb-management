@@ -1957,8 +1957,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["data"],
+  props: ["data", "nameSearch"],
   data: function data() {
     var _this = this;
 
@@ -2091,8 +2094,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["data"],
+  props: ["data", "nameSearch"],
   data: function data() {
     var _this = this;
 
@@ -2160,6 +2166,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function () {
+    var context = this,
+        args = arguments;
+
+    var later = function later() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2172,12 +2200,17 @@ __webpack_require__.r(__webpack_exports__);
       antibioticStrains: [],
       pharmacology: [],
       advancedSearch: false,
+      nameSearch: false,
+      nameToSearch: "",
       selectedSigns: [],
       selectedHormones: [],
       selectedChemicalComposition: [],
       selectedPharmacology: [],
       selectedAntibioticStrains: []
     };
+  },
+  created: function created() {
+    this.searchByName = debounce(this.search, 1000);
   },
   mounted: function mounted() {
     var _this = this;
@@ -2201,18 +2234,27 @@ __webpack_require__.r(__webpack_exports__);
         this.advancedSearch = true;
       }
     },
+    toggleNameSearch: function toggleNameSearch() {
+      if (this.nameSearch) {
+        this.nameSearch = false;
+      } else {
+        this.nameSearch = true;
+      }
+    },
     search: function search() {
       var _this2 = this;
 
       var selectedSigns = this.selectedSigns,
           type = this.type,
+          nameSearch = this.nameSearch,
+          nameToSearch = this.nameToSearch,
           selectedHormones = this.selectedHormones,
           selectedChemicalComposition = this.selectedChemicalComposition,
           selectedPharmacology = this.selectedPharmacology,
           selectedAntibioticStrains = this.selectedAntibioticStrains,
           advancedSearch = this.advancedSearch;
 
-      if (selectedSigns.length > 0) {
+      if (!nameSearch && selectedSigns.length > 0 || nameSearch && nameToSearch.length > 0) {
         this.loading = true;
         axios.post("/search", {
           signs: selectedSigns.map(function (sign) {
@@ -2231,6 +2273,8 @@ __webpack_require__.r(__webpack_exports__);
             return as.id;
           }),
           advancedSearch: advancedSearch,
+          nameSearch: nameSearch,
+          nameToSearch: nameToSearch,
           type: type
         }).then(function (response) {
           return response.data;
@@ -2242,6 +2286,10 @@ __webpack_require__.r(__webpack_exports__);
         this.loading = false;
         this.results = [];
       }
+    },
+    setNameToSearch: function setNameToSearch(name) {
+      this.nameToSearch = name;
+      this.searchByName();
     },
     setSelectedSigns: function setSelectedSigns(signs) {
       this.selectedSigns = signs;
@@ -2380,8 +2428,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["type", "signs", "selectedSigns", "advancedSearch", "hormones", "chemicalComposition", "pharmacology", "antibioticStrains", "selectedHormones", "selectedChemicalComposition", "selectedPharmacology", "selectedAntibioticStrains"],
+  props: ["type", "signs", "selectedSigns", "advancedSearch", "nameSearch", "nameToSearch", "hormones", "chemicalComposition", "pharmacology", "antibioticStrains", "selectedHormones", "selectedChemicalComposition", "selectedPharmacology", "selectedAntibioticStrains"],
   mounted: function mounted() {
     console.log("Component mounted.");
   },
@@ -2455,7 +2531,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["results", "loading", "type"],
+  props: ["results", "loading", "type", "nameSearch"],
   mounted: function mounted() {
     console.log("Component mounted.");
   },
@@ -6962,7 +7038,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".advanced-search[data-v-6849e9f0] {\n  padding: 5px;\n  display: inline-block;\n}\n.searchbar[data-v-6849e9f0] {\n  padding: 5px 0;\n}\n.searchinput[data-v-6849e9f0] {\n  -webkit-box-flex: 1;\n          flex: 1;\n  margin-right: 10px;\n}\n.searchinput[data-v-6849e9f0]:first-child {\n  margin-right: 10px !important;\n}\n.searchinput[data-v-6849e9f0]:last-child {\n  margin-right: 0;\n}\n.typeinput[data-v-6849e9f0] {\n  width: 200px;\n}", ""]);
+exports.push([module.i, ".advanced-search[data-v-6849e9f0],\n.name-search[data-v-6849e9f0] {\n  padding: 5px;\n  display: inline-block;\n}\n.searchbar[data-v-6849e9f0] {\n  padding: 5px 0;\n}\n.searchinput[data-v-6849e9f0] {\n  -webkit-box-flex: 1;\n          flex: 1;\n  margin-right: 10px;\n}\n.searchinput[data-v-6849e9f0]:first-child {\n  margin-right: 10px !important;\n}\n.searchinput[data-v-6849e9f0]:last-child {\n  margin-right: 0;\n}\n.namesearchinput[data-v-6849e9f0] {\n  height: 32px;\n}\n.namesearchinput[data-v-6849e9f0]::-webkit-input-placeholder {\n  color: #000;\n}\n.namesearchinput[data-v-6849e9f0]:-ms-input-placeholder {\n  color: #000;\n}\n.namesearchinput[data-v-6849e9f0]::-moz-placeholder {\n  color: #000;\n}\n.namesearchinput[data-v-6849e9f0]::-ms-input-placeholder {\n  color: #000;\n}\n.namesearchinput[data-v-6849e9f0]::placeholder {\n  color: #000;\n}\n.typeinput[data-v-6849e9f0] {\n  width: 200px;\n}", ""]);
 
 // exports
 
@@ -38568,9 +38644,11 @@ var render = function() {
   return _c("div", { staticClass: "herb" }, [
     _c("h5", { staticClass: "card-title" }, [
       _vm._v("\n    " + _vm._s(_vm.english_name) + "\n    "),
-      _c("span", { staticClass: "badge badge-info" }, [
-        _vm._v(_vm._s(_vm.signs_symptoms_count) + " Signs Matched")
-      ])
+      !_vm.nameSearch
+        ? _c("span", { staticClass: "badge badge-info" }, [
+            _vm._v(_vm._s(_vm.signs_symptoms_count) + " Signs Matched")
+          ])
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
@@ -38797,9 +38875,11 @@ var render = function() {
   return _c("div", { staticClass: "herbformula" }, [
     _c("h5", { staticClass: "card-title" }, [
       _vm._v("\n    " + _vm._s(_vm.english_name) + "\n    "),
-      _c("span", { staticClass: "badge badge-info" }, [
-        _vm._v(_vm._s(_vm.signs_symptoms_count) + " Signs Matched")
-      ])
+      !_vm.nameSearch
+        ? _c("span", { staticClass: "badge badge-info" }, [
+            _vm._v(_vm._s(_vm.signs_symptoms_count) + " Signs Matched")
+          ])
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
@@ -38970,7 +39050,9 @@ var render = function() {
           hormones: _vm.hormones,
           chemicalComposition: _vm.chemicalComposition,
           antibioticStrains: _vm.antibioticStrains,
-          pharmacology: _vm.pharmacology
+          pharmacology: _vm.pharmacology,
+          nameSearch: _vm.nameSearch,
+          nameToSearch: _vm.nameToSearch
         },
         on: {
           typeUpdated: function($event) {
@@ -38993,12 +39075,23 @@ var render = function() {
           },
           advancedSearchToggled: function($event) {
             return _vm.toggleAdvancedSearch()
+          },
+          nameSearchToggled: function($event) {
+            return _vm.toggleNameSearch()
+          },
+          nameUpdated: function($event) {
+            return _vm.setNameToSearch($event)
           }
         }
       }),
       _vm._v(" "),
       _c("search-results", {
-        attrs: { type: _vm.type, loading: _vm.loading, results: _vm.results }
+        attrs: {
+          nameSearch: _vm.nameSearch,
+          type: _vm.type,
+          loading: _vm.loading,
+          results: _vm.results
+        }
       })
     ],
     1
@@ -39031,22 +39124,42 @@ var render = function() {
       "div",
       { staticClass: "d-flex" },
       [
-        _c("v-select", {
-          staticClass: "searchinput",
-          attrs: {
-            placeholder: "Enter signs and symptoms to search for herbs",
-            multiple: "",
-            options: _vm.signs,
-            value: _vm.selectedSigns,
-            getOptionLabel: _vm.getOptionLabel,
-            getOptionKey: _vm.getOptionKey
-          },
-          on: {
-            input: function($event) {
-              return _vm.$emit("signsUpdated", $event)
-            }
-          }
-        }),
+        !_vm.nameSearch
+          ? _c("v-select", {
+              staticClass: "searchinput",
+              attrs: {
+                placeholder:
+                  "Enter signs and symptoms to search for " +
+                  _vm.type.toLowerCase(),
+                multiple: "",
+                options: _vm.signs,
+                value: _vm.selectedSigns,
+                getOptionLabel: _vm.getOptionLabel,
+                getOptionKey: _vm.getOptionKey
+              },
+              on: {
+                input: function($event) {
+                  return _vm.$emit("signsUpdated", $event)
+                }
+              }
+            })
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.nameSearch
+          ? _c("input", {
+              staticClass: "form-control namesearchinput searchinput",
+              attrs: {
+                placeholder:
+                  "Enter a name to search for " + _vm.type.toLowerCase()
+              },
+              domProps: { value: _vm.nameToSearch },
+              on: {
+                input: function($event) {
+                  return _vm.$emit("nameUpdated", $event.target.value)
+                }
+              }
+            })
+          : _vm._e(),
         _vm._v(" "),
         _c("v-select", {
           staticClass: "typeinput",
@@ -39089,6 +39202,28 @@ var render = function() {
           ]
         )
       : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "a",
+      {
+        staticClass: "name-search",
+        attrs: { href: "javascript:void(0)" },
+        on: {
+          click: function($event) {
+            return _vm.$emit("nameSearchToggled")
+          }
+        }
+      },
+      [
+        _vm._v(
+          _vm._s(
+            !_vm.nameSearch
+              ? "Search for a specific " + _vm.type.toLowerCase()
+              : "Search by signs"
+          )
+        )
+      ]
+    ),
     _vm._v(" "),
     _vm.advancedSearch
       ? _c(
@@ -39244,12 +39379,20 @@ var render = function() {
                             { staticClass: "card-body" },
                             [
                               _vm.type === "Herb"
-                                ? _c("herb", { attrs: { data: result } })
+                                ? _c("herb", {
+                                    attrs: {
+                                      data: result,
+                                      nameSearch: _vm.nameSearch
+                                    }
+                                  })
                                 : _vm._e(),
                               _vm._v(" "),
                               _vm.type === "Herb Formula"
                                 ? _c("herb-formula", {
-                                    attrs: { data: result }
+                                    attrs: {
+                                      data: result,
+                                      nameSearch: _vm.nameSearch
+                                    }
                                   })
                                 : _vm._e()
                             ],

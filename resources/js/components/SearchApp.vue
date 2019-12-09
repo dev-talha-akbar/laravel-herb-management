@@ -9,6 +9,8 @@
       :chemicalComposition="chemicalComposition"
       :antibioticStrains="antibioticStrains"
       :pharmacology="pharmacology"
+      :nameSearch="nameSearch"
+      :nameToSearch="nameToSearch"
       @typeUpdated="setType($event)"
       @signsUpdated="setSelectedSigns($event)"
       @hormonesUpdated="setSelectedHormones($event)"
@@ -16,12 +18,30 @@
       @pharmacologyUpdated="setSelectedPharmacology($event)"
       @antibioticStrainsUpdated="setSelectedAntibioticStrains($event)"
       @advancedSearchToggled="toggleAdvancedSearch()"
+      @nameSearchToggled="toggleNameSearch()"
+      @nameUpdated="setNameToSearch($event)"
     />
-    <search-results :type="type" :loading="loading" :results="results" />
+    <search-results :nameSearch="nameSearch" :type="type" :loading="loading" :results="results" />
   </div>
 </template>
 
 <script>
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this,
+      args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
+
 export default {
   data() {
     return {
@@ -34,12 +54,17 @@ export default {
       antibioticStrains: [],
       pharmacology: [],
       advancedSearch: false,
+      nameSearch: false,
+      nameToSearch: "",
       selectedSigns: [],
       selectedHormones: [],
       selectedChemicalComposition: [],
       selectedPharmacology: [],
       selectedAntibioticStrains: []
     };
+  },
+  created() {
+    this.searchByName = debounce(this.search, 1000);
   },
   mounted() {
     axios
@@ -63,17 +88,30 @@ export default {
         this.advancedSearch = true;
       }
     },
+    toggleNameSearch() {
+      if (this.nameSearch) {
+        this.nameSearch = false;
+      } else {
+        this.nameSearch = true;
+      }
+    },
     search() {
       const {
         selectedSigns,
         type,
+        nameSearch,
+        nameToSearch,
         selectedHormones,
         selectedChemicalComposition,
         selectedPharmacology,
         selectedAntibioticStrains,
         advancedSearch
       } = this;
-      if (selectedSigns.length > 0) {
+
+      if (
+        (!nameSearch && selectedSigns.length > 0) ||
+        (nameSearch && nameToSearch.length > 0)
+      ) {
         this.loading = true;
 
         axios
@@ -84,6 +122,8 @@ export default {
             pharmacology: selectedPharmacology.map(pharma => pharma.id),
             antibioticStrains: selectedAntibioticStrains.map(as => as.id),
             advancedSearch,
+            nameSearch,
+            nameToSearch,
             type
           })
           .then(response => response.data)
@@ -95,6 +135,10 @@ export default {
         this.loading = false;
         this.results = [];
       }
+    },
+    setNameToSearch(name) {
+      this.nameToSearch = name;
+      this.searchByName();
     },
     setSelectedSigns(signs) {
       this.selectedSigns = signs;

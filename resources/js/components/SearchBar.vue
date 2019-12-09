@@ -2,7 +2,7 @@
   <div class="searchbar">
     <div class="d-flex">
       <v-select
-        placeholder="Enter signs and symptoms to search for herbs"
+        :placeholder="`Enter signs and symptoms to search for ${type.toLowerCase()}`"
         multiple
         :options="signs"
         :value="selectedSigns"
@@ -10,7 +10,15 @@
         class="searchinput"
         :getOptionLabel="getOptionLabel"
         :getOptionKey="getOptionKey"
+        v-if="!nameSearch"
       ></v-select>
+      <input
+        v-if="nameSearch"
+        class="form-control namesearchinput searchinput"
+        @input="$emit('nameUpdated', $event.target.value)"
+        :placeholder="`Enter a name to search for ${type.toLowerCase()}`"
+        :value="nameToSearch"
+      />
       <v-select
         placeholder="Results type"
         :value="type"
@@ -26,6 +34,11 @@
       class="advanced-search"
       v-if="type === 'Herb'"
     >{{ !advancedSearch ? 'More search options' : 'Clear additional search' }}</a>
+    <a
+      href="javascript:void(0)"
+      @click="$emit('nameSearchToggled')"
+      class="name-search"
+    >{{ !nameSearch ? `Search for a specific ${type.toLowerCase()}` : 'Search by signs' }}</a>
     <div class="d-flex" v-if="advancedSearch">
       <v-select
         placeholder="Hormones"
@@ -71,7 +84,8 @@
   </div>
 </template>
 <style lang="scss" scoped>
-.advanced-search {
+.advanced-search,
+.name-search {
   padding: 5px;
   display: inline-block;
 }
@@ -88,6 +102,20 @@
 .searchinput:last-child {
   margin-right: 0;
 }
+.namesearchinput {
+  height: 32px;
+}
+.namesearchinput::-webkit-input-placeholder {
+  color: #000;
+}
+
+.namesearchinput:-ms-input-placeholder {
+  color: #000;
+}
+
+.namesearchinput::placeholder {
+  color: #000;
+}
 .typeinput {
   width: 200px;
 }
@@ -99,6 +127,8 @@ export default {
     "signs",
     "selectedSigns",
     "advancedSearch",
+    "nameSearch",
+    "nameToSearch",
     "hormones",
     "chemicalComposition",
     "pharmacology",

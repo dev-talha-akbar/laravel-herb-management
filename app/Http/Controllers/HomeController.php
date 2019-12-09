@@ -60,14 +60,33 @@ class HomeController extends Controller
         $pharmacology = $request->pharmacology;
         $antibioticStrains = $request->antibioticStrains;
         $advancedSearch = $request->advancedSearch;
+        $nameSearch = $request->nameSearch;
+        $nameToSearch = $request->nameToSearch;
         $results = null;
+        $type = $request->type;
         $typeClass = $request->type === 'Herb' ? Herb::class : HerbFormula::class;
 
-        $results = $typeClass::withCount(['signs_symptoms' => function ($q) use ($signs) {
-            $q->whereIn('id', $signs);
-        }])->whereHas('signs_symptoms', function ($q) use ($signs) {
-            $q->whereIn('id', $signs);
-        });
+        if (!$nameSearch) {
+            $results = $typeClass::withCount(['signs_symptoms' => function ($q) use ($signs) {
+                $q->whereIn('id', $signs);
+            }])->whereHas('signs_symptoms', function ($q) use ($signs) {
+                $q->whereIn('id', $signs);
+            });
+        } else {
+            $results = $typeClass::where(function ($q) use ($nameSearch, $nameToSearch, $type) {
+                $cols = ['english_name', 'chinese_name'];
+
+                if ($type === 'Herb') {
+                    $cols = array_merge($cols, ['pharmaceutical_name', 'literal_name']);
+                }
+
+                $q->where(\DB::raw('1 = 1'));
+
+                foreach ($cols as $col) {
+                    $q->orWhere($col, 'LIKE', "%{$nameToSearch}%");
+                }
+            });
+        }
 
         if ($advancedSearch) {
             if (count($hormones) > 0) {
@@ -103,7 +122,13 @@ class HomeController extends Controller
             $results = $results->with('formulas');
         }
 
-        $results = $results->with('items')->orderBy('signs_symptoms_count', 'desc')->get();
+        $results = $results->with('items');
+
+        if (!$nameSearch) {
+            $results = $results->orderBy('signs_symptoms_count', 'desc');
+        }
+
+        $results = $results->get();
 
         return response()->json($results);
     }

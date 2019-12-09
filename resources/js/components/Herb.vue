@@ -2,7 +2,10 @@
   <div class="herb">
     <h5 class="card-title">
       {{ english_name }}
-      <span class="badge badge-info">{{ signs_symptoms_count }} Signs Matched</span>
+      <span
+        v-if="!nameSearch"
+        class="badge badge-info"
+      >{{ signs_symptoms_count }} Signs Matched</span>
     </h5>
     <div class="row">
       <div class="col-7">
@@ -113,7 +116,7 @@
 </template>
 <script>
 export default {
-  props: ["data"],
+  props: ["data", "nameSearch"],
   data() {
     const getItemsOfType = type => {
       return this.data.items
