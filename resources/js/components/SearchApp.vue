@@ -83,14 +83,21 @@ export default {
   methods: {
     toggleAdvancedSearch() {
       if (this.advancedSearch) {
+        this.selectedHormones = [];
+        this.selectedChemicalComposition = [];
+        this.selectedPharmacology = [];
+        this.selectedAntibioticStrains = [];
         this.advancedSearch = false;
+        this.search();
       } else {
         this.advancedSearch = true;
       }
     },
     toggleNameSearch() {
       if (this.nameSearch) {
+        this.nameToSearch = "";
         this.nameSearch = false;
+        this.search();
       } else {
         this.nameSearch = true;
       }
