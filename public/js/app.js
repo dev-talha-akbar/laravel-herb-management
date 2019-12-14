@@ -1973,7 +1973,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }).join(", ");
     };
 
-    return _objectSpread({}, this.data, {
+    return _objectSpread({
+      signs_symptoms_count: null
+    }, this.data, {
       categories: getItemsOfType("categories"),
       signs: getItemsOfType("signs_symptoms"),
       properties: getItemsOfType("properties"),
@@ -2110,7 +2112,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }).join(", ");
     };
 
-    return _objectSpread({}, this.data, {
+    return _objectSpread({
+      signs_symptoms_count: signs_symptoms_count
+    }, this.data, {
       categories: getItemsOfType("categories"),
       signs: getItemsOfType("signs_symptoms"),
       formula_diagnosis: getItemsOfType("formula_diagnosis"),
@@ -2261,7 +2265,7 @@ function debounce(func, wait, immediate) {
           selectedAntibioticStrains = this.selectedAntibioticStrains,
           advancedSearch = this.advancedSearch;
 
-      if (!nameSearch && selectedSigns.length > 0 || nameSearch && nameToSearch.length > 0) {
+      if (!nameSearch && selectedSigns.length > 0 || nameSearch && nameToSearch.length > 0 || selectedHormones.length > 0 || selectedChemicalComposition.length > 0 || selectedPharmacology.length > 0 || selectedAntibioticStrains.length > 0) {
         this.loading = true;
         axios.post("/search", {
           signs: selectedSigns.map(function (sign) {
@@ -38651,7 +38655,7 @@ var render = function() {
   return _c("div", { staticClass: "herb" }, [
     _c("h5", { staticClass: "card-title" }, [
       _vm._v("\n    " + _vm._s(_vm.english_name) + "\n    "),
-      !_vm.nameSearch
+      !_vm.nameSearch && _vm.signs_symptoms_count
         ? _c("span", { staticClass: "badge badge-info" }, [
             _vm._v(_vm._s(_vm.signs_symptoms_count) + " Signs Matched")
           ])
@@ -38882,7 +38886,7 @@ var render = function() {
   return _c("div", { staticClass: "herbformula" }, [
     _c("h5", { staticClass: "card-title" }, [
       _vm._v("\n    " + _vm._s(_vm.english_name) + "\n    "),
-      !_vm.nameSearch
+      !_vm.nameSearch && _vm.signs_symptoms_count
         ? _c("span", { staticClass: "badge badge-info" }, [
             _vm._v(_vm._s(_vm.signs_symptoms_count) + " Signs Matched")
           ])

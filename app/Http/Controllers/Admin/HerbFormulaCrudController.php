@@ -72,10 +72,10 @@ class HerbFormulaCrudController extends CrudController
             'type'      => 'herb-selection',
             'name'      => 'herbs',
             'entity'    => 'herbs',
-            'attribute' => 'english_name',
+            'attribute' => 'chinese_name',
             'model'     => "App\Models\Herb",
             'options'   => (function ($query) {
-                return $query->orderBy('english_name', 'ASC')->get();
+                return $query->orderBy('chinese_name', 'ASC')->get();
             }),
             'tab' => 'Herbs',
         ];

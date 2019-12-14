@@ -66,13 +66,13 @@ class HomeController extends Controller
         $type = $request->type;
         $typeClass = $request->type === 'Herb' ? Herb::class : HerbFormula::class;
 
-        if (!$nameSearch) {
+        if (!$nameSearch && count($signs) > 0) {
             $results = $typeClass::withCount(['signs_symptoms' => function ($q) use ($signs) {
                 $q->whereIn('id', $signs);
             }])->whereHas('signs_symptoms', function ($q) use ($signs) {
                 $q->whereIn('id', $signs);
             });
-        } else {
+        } else if ($nameSearch && isset($nameToSearch)) {
             $results = $typeClass::where(function ($q) use ($nameSearch, $nameToSearch, $type) {
                 $cols = ['english_name', 'chinese_name'];
 
@@ -80,12 +80,14 @@ class HomeController extends Controller
                     $cols = array_merge($cols, ['pharmaceutical_name', 'literal_name']);
                 }
 
-                $q->where(\DB::raw('1 = 1'));
+                $q->where(\DB::raw('1'), \DB::raw('1'));
 
                 foreach ($cols as $col) {
                     $q->orWhere($col, 'LIKE', "%{$nameToSearch}%");
                 }
             });
+        } else {
+            $results = $typeClass::where(\DB::raw('1'), \DB::raw('1'));
         }
 
         if ($advancedSearch) {
@@ -124,7 +126,7 @@ class HomeController extends Controller
 
         $results = $results->with('items');
 
-        if (!$nameSearch) {
+        if (!$nameSearch && count($signs) > 0) {
             $results = $results->orderBy('signs_symptoms_count', 'desc');
         }
 

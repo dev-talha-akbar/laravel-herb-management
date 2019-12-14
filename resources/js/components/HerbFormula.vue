@@ -3,7 +3,7 @@
     <h5 class="card-title">
       {{ english_name }}
       <span
-        v-if="!nameSearch"
+        v-if="!nameSearch && signs_symptoms_count"
         class="badge badge-info"
       >{{ signs_symptoms_count }} Signs Matched</span>
     </h5>
@@ -89,6 +89,7 @@ export default {
     };
 
     return {
+      signs_symptoms_count,
       ...this.data,
       categories: getItemsOfType("categories"),
       signs: getItemsOfType("signs_symptoms"),

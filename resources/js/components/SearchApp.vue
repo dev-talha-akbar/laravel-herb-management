@@ -117,7 +117,11 @@ export default {
 
       if (
         (!nameSearch && selectedSigns.length > 0) ||
-        (nameSearch && nameToSearch.length > 0)
+        (nameSearch && nameToSearch.length > 0) ||
+        selectedHormones.length > 0 ||
+        selectedChemicalComposition.length > 0 ||
+        selectedPharmacology.length > 0 ||
+        selectedAntibioticStrains.length > 0
       ) {
         this.loading = true;
 
