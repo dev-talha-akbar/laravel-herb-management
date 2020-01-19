@@ -93,7 +93,7 @@
       <div class="col-5">
         <div class="herbconstituents">
           <div class="flex justify-content-end">
-            <img width="64" :src="dropbox_herb_image" />
+            <img width="96" :src="dropbox_herb_image" />
           </div>
           <div class="flex herbconstituentimages">
             <div
@@ -142,11 +142,13 @@ export default {
       toxicity_contraindications: getItemsOfType("toxicity_contraindications"),
       usage_label:
         this.data.usage !== null
-          ? this.data.usage === 0
+          ? this.data.usage == "0"
             ? "Both Orally and Topically"
-            : this.data.usage === 1
+            : this.data.usage == "1"
             ? "Orally"
-            : this.data.usage === "Topically"
+            : this.data.usage == "2"
+            ? "Topically"
+            : "Not Known"
           : "Not Known",
       view_more: false
     };
@@ -182,8 +184,8 @@ export default {
   }
   .constituent {
     img {
-      width: 28px;
-      height: 28px;
+      width: 64px;
+      height: 64px;
     }
 
     margin: 4px;

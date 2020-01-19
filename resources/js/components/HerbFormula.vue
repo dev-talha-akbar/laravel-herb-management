@@ -89,7 +89,7 @@ export default {
     };
 
     return {
-      signs_symptoms_count,
+      signs_symptoms_count: null,
       ...this.data,
       categories: getItemsOfType("categories"),
       signs: getItemsOfType("signs_symptoms"),
@@ -132,8 +132,8 @@ export default {
   }
   .herb {
     img {
-      width: 32px;
-      height: 32px;
+      width: 96px;
+      height: 96px;
       margin-right: 4px;
     }
     img[src="/img/no-preview.png"] {
