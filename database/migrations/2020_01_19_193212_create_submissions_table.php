@@ -15,8 +15,8 @@ class CreateSubmissionsTable extends Migration
     {
         Schema::create('submissions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->json('form');
-            $table->json('result');
+            $table->text('form');
+            $table->text('result');
             $table->smallInteger('status');
             $table->timestamps();
         });
