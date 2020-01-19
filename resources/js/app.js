@@ -31,6 +31,8 @@ Vue.component(
 Vue.component("herb", require("./components/Herb.vue").default);
 Vue.component("herb-formula", require("./components/HerbFormula.vue").default);
 
+Vue.component("form-app", require("./components/FormApp.vue").default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

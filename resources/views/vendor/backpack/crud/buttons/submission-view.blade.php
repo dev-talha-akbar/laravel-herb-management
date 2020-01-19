@@ -1,0 +1,1 @@
+<a href="{{ url('/submission/' . $entry->id) }} " class="btn btn-xs btn-default"> View</a>

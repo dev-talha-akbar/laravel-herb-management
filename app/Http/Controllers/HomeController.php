@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Herb;
 use App\Models\HerbFormula;
+use App\Models\Submission;
 
 class HomeController extends Controller
 {
@@ -29,6 +30,25 @@ class HomeController extends Controller
         return view('home');
     }
 
+    public function submission($id)
+    {
+        $submission = Submission::findOrFail($id);
+
+        return view('home')->with('submission', $submission);
+    }
+
+
+    public function editSubmission(Request $request, $id)
+    {
+        $submission = Submission::findOrFail($id);
+
+        $submission->update([
+            'form' => $request->form
+        ]);
+
+        return response()->json(true);
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -45,6 +65,13 @@ class HomeController extends Controller
         ])->get();
 
         return response()->json($options->groupBy('type'));
+    }
+
+    public function submit(Request $request)
+    {
+        $submission = Submission::create(['form' => $request->form, 'result' => '', 'status' => 1]);
+
+        return response()->json($submission->id);
     }
 
     /**
