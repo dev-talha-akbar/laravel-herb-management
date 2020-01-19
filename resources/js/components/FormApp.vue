@@ -379,8 +379,8 @@
 <script>
 export default {
   data() {
-    var overrides = {};
-    if (submissionForm) {
+    let overrides = {};
+    if (typeof submissionForm !== "undefined") {
       overrides = {
         ...JSON.parse(submissionForm.form),
         editing: true,
@@ -388,7 +388,7 @@ export default {
       };
     }
 
-    return {
+    let data = {
       plname: "",
       pfname: "",
       pmname: "",
@@ -412,6 +412,10 @@ export default {
       editing: false,
       ...overrides
     };
+
+    console.log(data);
+
+    return data;
   },
   methods: {
     newSubmission() {

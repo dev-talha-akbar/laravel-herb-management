@@ -2230,14 +2230,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     var overrides = {};
 
-    if (submissionForm) {
+    if (typeof submissionForm !== "undefined") {
       overrides = _objectSpread({}, JSON.parse(submissionForm.form), {
         editing: true,
         subId: submissionForm.id
       });
     }
 
-    return _objectSpread({
+    var data = _objectSpread({
       plname: "",
       pfname: "",
       pmname: "",
@@ -2260,6 +2260,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       submitting: false,
       editing: false
     }, overrides);
+
+    console.log(data);
+    return data;
   },
   methods: {
     newSubmission: function newSubmission() {
