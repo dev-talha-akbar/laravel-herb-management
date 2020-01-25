@@ -8,10 +8,10 @@
       >{{ signs_symptoms_count }} Signs Matched</span>
     </h5>
     <div class="row">
-      <div class="col-7">
+      <div class="col-12">
         <table class="formuladetails table table-borderless table-sm">
           <tbody>
-            <tr>
+            <tr v-if="view_more">
               <th>English Name</th>
               <td>{{ english_name }}</td>
             </tr>
@@ -23,7 +23,7 @@
               <th>Signs / Symptoms</th>
               <td>{{ signs }}</td>
             </tr>
-            <tr>
+            <tr v-if="view_more">
               <th>Category</th>
               <td>{{ categories }}</td>
             </tr>
@@ -54,7 +54,7 @@
           </tbody>
         </table>
       </div>
-      <div class="col-5">
+      <div class="col-12">
         <div class="herbsused">
           <b>Herbs Used in this Formula</b>
           <div class="flex herbsusedimages">

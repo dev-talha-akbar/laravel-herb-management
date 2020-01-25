@@ -8,10 +8,10 @@
       >{{ signs_symptoms_count }} Signs Matched</span>
     </h5>
     <div class="row">
-      <div class="col-7">
+      <div class="col-12">
         <table class="herbdetails table table-borderless table-sm">
           <tbody>
-            <tr>
+            <tr v-if="view_more">
               <th>English Name</th>
               <td>{{ english_name }}</td>
             </tr>
@@ -19,11 +19,11 @@
               <th>Chinese Name</th>
               <td>{{ chinese_name }}</td>
             </tr>
-            <tr>
+            <tr v-if="view_more">
               <th>Pharmaceutical Name</th>
               <td>{{ pharmaceutical_name }}</td>
             </tr>
-            <tr>
+            <tr v-if="view_more">
               <th>Literal Name</th>
               <td>{{ literal_name }}</td>
             </tr>
@@ -31,7 +31,7 @@
               <th>Signs / Symptoms</th>
               <td>{{ signs }}</td>
             </tr>
-            <tr>
+            <tr v-if="view_more">
               <th>Category</th>
               <td>{{ categories }}</td>
             </tr>
@@ -43,7 +43,7 @@
               <th>Administered</th>
               <td>{{ usage_label }}</td>
             </tr>
-            <tr>
+            <tr v-if="view_more">
               <th>Formulas Found In</th>
               <td>{{ formulas.map(formula => formula.english_name).join(', ') }}</td>
             </tr>
@@ -90,7 +90,7 @@
           </tbody>
         </table>
       </div>
-      <div class="col-5">
+      <div class="col-12">
         <div class="herbconstituents">
           <div class="flex justify-content-end">
             <img width="96" :src="dropbox_herb_image" />

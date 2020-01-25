@@ -15,4 +15,5 @@ Route::group([
     Route::crud('herb-formula', 'HerbFormulaCrudController');
     Route::crud('admin', 'AdminCrudController');
     Route::crud('submission', 'SubmissionCrudController');
+    Route::crud('adminsignssymptoms', 'AdminSignsSymptomsCrudController');
 }); // this should be the absolute last line of this file

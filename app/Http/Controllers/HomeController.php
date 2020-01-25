@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\Herb;
 use App\Models\HerbFormula;
 use App\Models\Submission;
+use DB;
 
 class HomeController extends Controller
 {
@@ -17,7 +18,6 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
     }
 
     /**
@@ -35,18 +35,6 @@ class HomeController extends Controller
         $submission = Submission::findOrFail($id);
 
         return view('home')->with('submission', $submission);
-    }
-
-
-    public function editSubmission(Request $request, $id)
-    {
-        $submission = Submission::findOrFail($id);
-
-        $submission->update([
-            'form' => $request->form
-        ]);
-
-        return response()->json(true);
     }
 
     /**
@@ -67,11 +55,63 @@ class HomeController extends Controller
         return response()->json($options->groupBy('type'));
     }
 
+    public function group(Request $request, $id)
+    {
+        $sign_symptom = DB::table('sign_symptom_groups')->where('item_id', $id)->first();
+
+        if ($sign_symptom) {
+            DB::table('sign_symptom_groups')->where('item_id', $id)->update([
+                'group' => $request->group
+            ]);
+        } else {
+            DB::table('sign_symptom_groups')->insert([
+                'item_id' => $id,
+                'group' => $request->group
+            ]);
+        }
+    }
+
     public function submit(Request $request)
     {
-        $submission = Submission::create(['form' => $request->form, 'result' => '', 'status' => 1]);
+        $result = $this->searchForSigns($request->signsSelected);
+
+        $submission = Submission::create(['form' => $request->form, 'result' => json_encode($result), 'status' => 1]);
 
         return response()->json($submission->id);
+    }
+
+    public function editSubmission(Request $request, $id)
+    {
+        $submission = Submission::findOrFail($id);
+
+        $result = $this->searchForSigns($request->signsSelected);
+
+        $submission->update([
+            'form' => $request->form,
+            'result' => json_encode($result)
+        ]);
+
+        return response()->json(true);
+    }
+
+    private function searchForSigns($signs)
+    {
+        $herb_results = Herb::withCount(['signs_symptoms' => function ($q) use ($signs) {
+            $q->whereIn('id', $signs);
+        }])->whereHas('signs_symptoms', function ($q) use ($signs) {
+            $q->whereIn('id', $signs);
+        })->orderBy('signs_symptoms_count', 'desc')->with('formulas')->with('items')->get();
+
+        $herb_formula_results = HerbFormula::withCount(['signs_symptoms' => function ($q) use ($signs) {
+            $q->whereIn('id', $signs);
+        }])->whereHas('signs_symptoms', function ($q) use ($signs) {
+            $q->whereIn('id', $signs);
+        })->orderBy('signs_symptoms_count', 'desc')->with('herbs')->with('items')->get();
+
+        return [
+            'herbs' => $herb_results,
+            'herb_formulas' => $herb_formula_results
+        ];
     }
 
     /**

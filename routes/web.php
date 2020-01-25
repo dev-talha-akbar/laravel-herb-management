@@ -18,4 +18,5 @@ Route::get('/submission/{id}', 'HomeController@submission');
 Route::get('/options', 'HomeController@options');
 Route::post('/search', 'HomeController@search');
 Route::post('/submit', 'HomeController@submit');
+Route::post('/admin_signs_symptoms/{id}/group', 'HomeController@group');
 Route::put('/submission/{id}', 'HomeController@editSubmission');

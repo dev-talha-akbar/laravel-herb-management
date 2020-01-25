@@ -1,16 +1,35 @@
 <template>
   <div class="form-app">
+    <div class="result" v-if="subId">
+      <h4>Recommended for you</h4>
+      <div class="row">
+        <div class="col-6">
+          <h3>Herbs</h3>
+          <SearchResults :results="result.herbs" type="Herb" :nameSearch="false" :loading="false" />
+        </div>
+        <div class="col-6">
+          <h3>Herb Formulas</h3>
+          <SearchResults
+            :results="result.herb_formulas"
+            type="Herb Formula"
+            :nameSearch="false"
+            :loading="false"
+          />
+        </div>
+      </div>
+    </div>
+    <h3 style="margin-bottom: 30px;">Patient Form</h3>
     <form class="form form-horizontal" @submit.prevent="newSubmission()">
       <div class="form-group row">
         <label for="plname" class="col-md-2 col-form-label">Patient's Last Name</label>
         <div class="col-md-10">
-          <input type="text" id="plname" v-model="plname" class="form-control" />
+          <input type="text" id="plname" v-model="plname" class="form-control" required />
         </div>
       </div>
       <div class="form-group row">
         <label for="pfname" class="col-md-2 col-form-label">Patient's First Name</label>
         <div class="col-md-10">
-          <input type="text" id="pfname" v-model="pfname" class="form-control" />
+          <input type="text" id="pfname" v-model="pfname" class="form-control" required />
         </div>
       </div>
       <div class="row">
@@ -18,7 +37,7 @@
           <div class="form-group row">
             <label for="pmname" class="col-md-4 col-form-label">Middle Name</label>
             <div class="col-md-8">
-              <input type="text" id="pmname" v-model="pmname" class="form-control" />
+              <input type="text" id="pmname" v-model="pmname" class="form-control" required />
             </div>
           </div>
         </div>
@@ -26,7 +45,7 @@
           <div class="form-group row">
             <label for="pdob" class="col-md-4 col-form-label">Patient's Date of Birth</label>
             <div class="col-md-8">
-              <input type="text" id="pdob" v-model="pdob" class="form-control" />
+              <input type="text" id="pdob" v-model="pdob" class="form-control" required />
             </div>
           </div>
         </div>
@@ -36,7 +55,7 @@
           <div class="form-group row">
             <label for="pcell" class="col-md-4 col-form-label">Telephone (Cell)</label>
             <div class="col-md-8">
-              <input type="text" id="pcell" v-model="pcell" class="form-control" />
+              <input type="text" id="pcell" v-model="pcell" class="form-control" required />
             </div>
           </div>
         </div>
@@ -44,7 +63,7 @@
           <div class="form-group row">
             <label for="pother" class="col-md-4 col-form-label">Telephone (Other)</label>
             <div class="col-md-8">
-              <input type="text" id="pother" v-model="pother" class="form-control" />
+              <input type="text" id="pother" v-model="pother" class="form-control" required />
             </div>
           </div>
         </div>
@@ -52,13 +71,13 @@
       <div class="form-group row">
         <label for="pemail" class="col-md-2 col-form-label">Email</label>
         <div class="col-md-10">
-          <input type="text" id="pemail" v-model="pemail" class="form-control" />
+          <input type="text" id="pemail" v-model="pemail" class="form-control" required />
         </div>
       </div>
       <div class="form-group row">
         <label for="paddress" class="col-md-2 col-form-label">Address</label>
         <div class="col-md-10">
-          <input type="text" id="paddress" v-model="paddress" class="form-control" />
+          <input type="text" id="paddress" v-model="paddress" class="form-control" required />
         </div>
       </div>
       <div class="row">
@@ -66,7 +85,7 @@
           <div class="form-group row">
             <label for="pcity" class="col-md-6 col-form-label">City</label>
             <div class="col-md-6">
-              <input type="text" id="pcity" v-model="pcity" class="form-control" />
+              <input type="text" id="pcity" v-model="pcity" class="form-control" required />
             </div>
           </div>
         </div>
@@ -74,7 +93,7 @@
           <div class="form-group row">
             <label for="pstate" class="col-md-6 col-form-label">State</label>
             <div class="col-md-6">
-              <input type="text" id="pstate" v-model="pstate" class="form-control" />
+              <input type="text" id="pstate" v-model="pstate" class="form-control" required />
             </div>
           </div>
         </div>
@@ -82,7 +101,7 @@
           <div class="form-group row">
             <label for="pzip" class="col-md-6 col-form-label">Zip</label>
             <div class="col-md-6">
-              <input type="text" id="pzip" v-model="pzip" class="form-control" />
+              <input type="text" id="pzip" v-model="pzip" class="form-control" required />
             </div>
           </div>
         </div>
@@ -143,7 +162,7 @@
       </div>
       <div class="form-group">
         <label for="pmaincomp">What is your main complaint?</label>
-        <textarea class="form-control" id="pmaincomp" v-model="pmaincomp" rows="5"></textarea>
+        <textarea class="form-control" id="pmaincomp" v-model="pmaincomp" rows="5" required></textarea>
       </div>
       <div class="two-col">
         <div class="form-group">
@@ -369,6 +388,21 @@
             </div>
           </div>
         </div>
+        <div class="form-group" v-for="group in sign_groups" :key="group.key">
+          <label>{{ group.label }} (check any patient experiences)</label>
+          <div class="two-col">
+            <div class="form-check" v-for="sign in sign_groups_values[group.key]" :key="sign.id">
+              <input
+                class="form-check-input"
+                v-model="sign_groups_form[group.key]"
+                type="checkbox"
+                :id="`${group.key}-${sign.id}`"
+                :value="sign.id"
+              />
+              <label class="form-check-label" :for="`${group.key}-${sign.id}`">{{ sign.name }}</label>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="form-group btn-submit">
         <button :disabled="submitting" class="btn btn-primary btn-lg btn-block">Submit</button>
@@ -377,16 +411,48 @@
   </div>
 </template>
 <script>
+import SearchResults from "./SearchResults";
+
 export default {
+  components: { SearchResults },
+  props: ["signs", "groups"],
   data() {
     let overrides = {};
     if (typeof submissionForm !== "undefined") {
       overrides = {
         ...JSON.parse(submissionForm.form),
+        result: submissionForm.result
+          ? JSON.parse(submissionForm.result)
+          : { herbs: [], herb_formulas: [] },
         editing: true,
         subId: submissionForm.id
       };
     }
+
+    let sign_groups = this.groups.map(group => ({
+      label: group,
+      key: group.toLowerCase().replace(" ", "-")
+    }));
+
+    let all_signs = this.signs;
+
+    let sign_groups_values = sign_groups.reduce(
+      (sign_groups_values, sign_group) => {
+        sign_groups_values[sign_group.key] = all_signs.filter(
+          sign => sign.group === sign_group.label
+        );
+        return sign_groups_values;
+      },
+      {}
+    );
+
+    let sign_groups_form = sign_groups.reduce(
+      (sign_groups_form, sign_group) => {
+        sign_groups_form[sign_group.key] = [];
+        return sign_groups_form;
+      },
+      {}
+    );
 
     let data = {
       plname: "",
@@ -410,10 +476,11 @@ export default {
       q5: [],
       submitting: false,
       editing: false,
+      sign_groups,
+      sign_groups_values,
+      sign_groups_form,
       ...overrides
     };
-
-    console.log(data);
 
     return data;
   },
@@ -422,11 +489,16 @@ export default {
       const { submitting, editing, subId, ...form } = this.$data;
       let $p;
 
+      const signsSelected = this.sign_groups.reduce((signsSelected, group) => {
+        return [...signsSelected, ...this.sign_groups_form[group.key]];
+      }, []);
+
       this.submitting = true;
 
       if (editing) {
         $p = axios.put("/submission/" + subId, {
-          form: JSON.stringify(form)
+          form: JSON.stringify(form),
+          signsSelected
         });
       } else {
         $p = axios
@@ -445,7 +517,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style>
 form {
   padding-bottom: 200px;
 }
@@ -468,5 +540,11 @@ form {
 }
 .btn-submit {
   margin-top: 80px;
+}
+.searchresults {
+  padding-top: 20px !important;
+}
+.result {
+  margin-bottom: 30px;
 }
 </style>
