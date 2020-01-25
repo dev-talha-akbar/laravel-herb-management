@@ -9,7 +9,20 @@
 </script>
 <?php
 $groups = [
-    'Digestive Issues'
+    'Digestive Issues',
+    'Respiratory',
+    'Cardiovascular',
+    'Cough',
+    'Diet/Lifestyle',
+    'Emotional',
+    'Skin Conditions',
+    'Neck & Head',
+    'Genitourinary',
+    'Neurological',
+    'General',
+    'Musculoskeletal',
+    'Men Only',
+    'Women Only'
 ];
 ?>
 <select id="group-select-<?php echo $entry->id; ?>" class="form-control" onchange="onGroupChange<?php echo $entry->id; ?>()">
