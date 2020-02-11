@@ -29,7 +29,22 @@
             </tr>
             <tr>
               <th>Signs / Symptoms</th>
-              <td>{{ signs }}</td>
+              <td>
+                <div style="position: relative; left: -5px">
+                  <span
+                    style="font-size: 0.9rem; margin-right: 5px;"
+                    class="badge badge-info"
+                    v-for="sign in matched_signs"
+                    :key="sign"
+                  >{{ sign }}</span>
+                  <span
+                    style="font-size: 0.9rem; margin-right: 5px;"
+                    class="badge badge-default"
+                    v-for="sign in not_matched_signs"
+                    :key="sign"
+                  >{{ sign }}</span>
+                </div>
+              </td>
             </tr>
             <tr v-if="view_more">
               <th>Category</th>
@@ -116,7 +131,7 @@
 </template>
 <script>
 export default {
-  props: ["data", "nameSearch"],
+  props: ["data", "nameSearch", "selectedSigns"],
   data() {
     const getItemsOfType = type => {
       return this.data.items
@@ -125,11 +140,32 @@ export default {
         .join(", ");
     };
 
+    const getMatchedSigns = () => {
+      return this.data.items
+        .filter(
+          item =>
+            item.type === "signs_symptoms" &&
+            this.selectedSigns.map(sign => sign.id).indexOf(item.id) > -1
+        )
+        .map(item => item.value);
+    };
+
+    const getNotMatchedSigns = () => {
+      return this.data.items
+        .filter(
+          item =>
+            item.type === "signs_symptoms" &&
+            this.selectedSigns.map(sign => sign.id).indexOf(item.id) === -1
+        )
+        .map(item => item.value);
+    };
+
     return {
-      signs_symptoms_count: null,
+      signs_symptoms_count: getMatchedSigns().length,
       ...this.data,
       categories: getItemsOfType("categories"),
-      signs: getItemsOfType("signs_symptoms"),
+      matched_signs: getMatchedSigns(),
+      not_matched_signs: getNotMatchedSigns(),
       properties: getItemsOfType("properties"),
       systems_affected: getItemsOfType("systems_affected"),
       actions: getItemsOfType("actions"),

@@ -19,8 +19,18 @@
         <fade-transition group>
           <div class="card" v-for="result in results" :key="result.id">
             <div class="card-body">
-              <herb v-if="type === 'Herb'" :data="result" :nameSearch="nameSearch" />
-              <herb-formula v-if="type === 'Herb Formula'" :data="result" :nameSearch="nameSearch" />
+              <herb
+                :selectedSigns="selectedSigns"
+                v-if="type === 'Herb'"
+                :data="result"
+                :nameSearch="nameSearch"
+              />
+              <herb-formula
+                :selectedSigns="selectedSigns"
+                v-if="type === 'Herb Formula'"
+                :data="result"
+                :nameSearch="nameSearch"
+              />
             </div>
           </div>
         </fade-transition>
@@ -48,7 +58,7 @@
 import { ZoomCenterTransition, FadeTransition } from "vue2-transitions";
 
 export default {
-  props: ["results", "loading", "type", "nameSearch"],
+  props: ["results", "loading", "type", "nameSearch", "selectedSigns"],
   mounted() {
     console.log("Component mounted.");
   },

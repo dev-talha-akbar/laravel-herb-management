@@ -2,11 +2,11 @@
   <div class="searchbar">
     <div class="d-flex">
       <v-select
-        :placeholder="`Enter signs and symptoms to search for ${type.toLowerCase()}`"
+        :placeholder="`Select terms to search for ${type.toLowerCase()}`"
         multiple
-        :options="signs"
-        :value="selectedSigns"
-        @input="$emit('signsUpdated', $event)"
+        :options="options"
+        :value="selectedOptions"
+        @input="$emit('optionsUpdated', $event)"
         class="searchinput"
         :getOptionLabel="getOptionLabel"
         :getOptionKey="getOptionKey"
@@ -30,57 +30,9 @@
     </div>
     <a
       href="javascript:void(0)"
-      @click="$emit('advancedSearchToggled')"
-      class="advanced-search"
-      v-if="type === 'Herb'"
-    >{{ !advancedSearch ? 'More search options' : 'Clear additional search' }}</a>
-    <a
-      href="javascript:void(0)"
       @click="$emit('nameSearchToggled')"
       class="name-search"
-    >{{ !nameSearch ? `Search for a specific ${type.toLowerCase()}` : 'Search by signs' }}</a>
-    <div class="d-flex" v-if="advancedSearch">
-      <v-select
-        placeholder="Hormones"
-        multiple
-        :options="hormones"
-        :value="selectedHormones"
-        @input="$emit('hormonesUpdated', $event)"
-        class="searchinput"
-        :getOptionLabel="getOptionLabel"
-        :getOptionKey="getOptionKey"
-      ></v-select>
-      <v-select
-        placeholder="Chemical Composition"
-        multiple
-        :options="chemicalComposition"
-        :value="selectedChemicalComposition"
-        @input="$emit('chemicalCompositionUpdated', $event)"
-        class="searchinput"
-        :getOptionLabel="getOptionLabel"
-        :getOptionKey="getOptionKey"
-      ></v-select>
-      <v-select
-        placeholder="Pharmacology"
-        multiple
-        :options="pharmacology"
-        :value="selectedPharmacology"
-        @input="$emit('pharmacologyUpdated', $event)"
-        class="searchinput"
-        :getOptionLabel="getOptionLabel"
-        :getOptionKey="getOptionKey"
-      ></v-select>
-      <v-select
-        placeholder="Antibiotic Strains"
-        multiple
-        :options="antibioticStrains"
-        :value="selectedAntibioticStrains"
-        @input="$emit('antibioticStrainsUpdated', $event)"
-        class="searchinput"
-        :getOptionLabel="getOptionLabel"
-        :getOptionKey="getOptionKey"
-      ></v-select>
-    </div>
+    >{{ !nameSearch ? `Search for a specific ${type.toLowerCase()}` : 'Search by terms' }}</a>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -122,22 +74,7 @@
 </style>
 <script>
 export default {
-  props: [
-    "type",
-    "signs",
-    "selectedSigns",
-    "advancedSearch",
-    "nameSearch",
-    "nameToSearch",
-    "hormones",
-    "chemicalComposition",
-    "pharmacology",
-    "antibioticStrains",
-    "selectedHormones",
-    "selectedChemicalComposition",
-    "selectedPharmacology",
-    "selectedAntibioticStrains"
-  ],
+  props: ["type", "options", "selectedOptions", "nameSearch", "nameToSearch"],
   mounted() {
     console.log("Component mounted.");
   },

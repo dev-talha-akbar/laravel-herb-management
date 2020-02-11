@@ -69,6 +69,7 @@ $crud->markFieldTypeAsLoaded($field);
             var $obj = element.select2({
                 theme: "bootstrap",
                 tags: true,
+                sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)),
                 createTag: function(params) {
                     return {
                         id: params.term,

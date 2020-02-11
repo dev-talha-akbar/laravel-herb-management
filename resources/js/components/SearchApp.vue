@@ -2,26 +2,21 @@
   <div class="search-app">
     <search-bar
       :type="type"
-      :selectedSigns="selectedSigns"
-      :signs="signs"
-      :advancedSearch="advancedSearch"
-      :hormones="hormones"
-      :chemicalComposition="chemicalComposition"
-      :antibioticStrains="antibioticStrains"
-      :pharmacology="pharmacology"
       :nameSearch="nameSearch"
       :nameToSearch="nameToSearch"
+      :options="allOptions"
       @typeUpdated="setType($event)"
-      @signsUpdated="setSelectedSigns($event)"
-      @hormonesUpdated="setSelectedHormones($event)"
-      @chemicalCompositionUpdated="setSelectedChemicalComposition($event)"
-      @pharmacologyUpdated="setSelectedPharmacology($event)"
-      @antibioticStrainsUpdated="setSelectedAntibioticStrains($event)"
-      @advancedSearchToggled="toggleAdvancedSearch()"
+      @optionsUpdated="setSelectedOptions($event)"
       @nameSearchToggled="toggleNameSearch()"
       @nameUpdated="setNameToSearch($event)"
     />
-    <search-results :nameSearch="nameSearch" :type="type" :loading="loading" :results="results" />
+    <search-results
+      :selectedSigns="selectedSigns"
+      :nameSearch="nameSearch"
+      :type="type"
+      :loading="loading"
+      :results="results"
+    />
   </div>
 </template>
 
@@ -48,20 +43,29 @@ export default {
       loading: false,
       results: [],
       type: "Herb Formula",
-      signs: [],
-      hormones: [],
-      chemicalComposition: [],
-      antibioticStrains: [],
-      pharmacology: [],
-      advancedSearch: false,
+      // signs: [],
+      // hormones: [],
+      // chemicalComposition: [],
+      // antibioticStrains: [],
+      // pharmacology: [],
+      // advancedSearch: false,
       nameSearch: false,
       nameToSearch: "",
-      selectedSigns: [],
-      selectedHormones: [],
-      selectedChemicalComposition: [],
-      selectedPharmacology: [],
-      selectedAntibioticStrains: []
+      // selectedSigns: [],
+      // selectedHormones: [],
+      // selectedChemicalComposition: [],
+      // selectedPharmacology: [],
+      // selectedAntibioticStrains: [],
+      allOptions: [],
+      selectedOptions: []
     };
+  },
+  computed: {
+    selectedSigns() {
+      return this.selectedOptions.filter(
+        option => option.type === "signs_symptoms"
+      );
+    }
   },
   created() {
     this.searchByName = debounce(this.search, 1000);
@@ -71,28 +75,42 @@ export default {
       .get("/options")
       .then(response => response.data)
       .then(options => {
-        this.signs = options.signs_symptoms || [];
-        this.hormones = options.hormones || [];
-        this.chemicalComposition = options.chemical_composition || [];
-        this.pharmacology = options.pharmacology || [];
-        this.antibioticStrains = options.antibiotic_strains || [];
+        // this.signs = options.signs_symptoms || [];
+        // this.hormones = options.hormones || [];
+        // this.chemicalComposition = options.chemical_composition || [];
+        // this.pharmacology = options.pharmacology || [];
+        // this.antibioticStrains = options.antibiotic_strains || [];
+        const {
+          signs_symptoms,
+          hormones,
+          chemical_composition,
+          pharmacology,
+          antibiotic_strains
+        } = options;
+        this.allOptions = [
+          ...signs_symptoms,
+          ...(hormones || []),
+          ...(chemical_composition || []),
+          ...(pharmacology || []),
+          ...(antibiotic_strains || [])
+        ];
       });
 
     window.document.body.classList.add("scroll");
   },
   methods: {
-    toggleAdvancedSearch() {
-      if (this.advancedSearch) {
-        this.selectedHormones = [];
-        this.selectedChemicalComposition = [];
-        this.selectedPharmacology = [];
-        this.selectedAntibioticStrains = [];
-        this.advancedSearch = false;
-        this.search();
-      } else {
-        this.advancedSearch = true;
-      }
-    },
+    // toggleAdvancedSearch() {
+    //   if (this.advancedSearch) {
+    //     this.selectedHormones = [];
+    //     this.selectedChemicalComposition = [];
+    //     this.selectedPharmacology = [];
+    //     this.selectedAntibioticStrains = [];
+    //     this.advancedSearch = false;
+    //     this.search();
+    //   } else {
+    //     this.advancedSearch = true;
+    //   }
+    // },
     toggleNameSearch() {
       if (this.nameSearch) {
         this.nameToSearch = "";
@@ -104,35 +122,41 @@ export default {
     },
     search() {
       const {
-        selectedSigns,
+        //selectedSigns,
         type,
         nameSearch,
         nameToSearch,
-        selectedHormones,
-        selectedChemicalComposition,
-        selectedPharmacology,
-        selectedAntibioticStrains,
-        advancedSearch
+        selectedOptions
+        // selectedHormones,
+        // selectedChemicalComposition,
+        // selectedPharmacology,
+        // selectedAntibioticStrains,
+        // advancedSearch
       } = this;
 
+      // if (
+      //   (!nameSearch && selectedSigns.length > 0) ||
+      //   (nameSearch && nameToSearch.length > 0) ||
+      //   selectedHormones.length > 0 ||
+      //   selectedChemicalComposition.length > 0 ||
+      //   selectedPharmacology.length > 0 ||
+      //   selectedAntibioticStrains.length > 0
+      // ) {
       if (
-        (!nameSearch && selectedSigns.length > 0) ||
-        (nameSearch && nameToSearch.length > 0) ||
-        selectedHormones.length > 0 ||
-        selectedChemicalComposition.length > 0 ||
-        selectedPharmacology.length > 0 ||
-        selectedAntibioticStrains.length > 0
+        (!nameSearch && selectedOptions.length > 0) ||
+        (nameSearch && nameToSearch.length > 0)
       ) {
         this.loading = true;
 
         axios
           .post("/search", {
-            signs: selectedSigns.map(sign => sign.id),
-            hormones: selectedHormones.map(hormone => hormone.id),
-            chemicalComposition: selectedChemicalComposition.map(cc => cc.id),
-            pharmacology: selectedPharmacology.map(pharma => pharma.id),
-            antibioticStrains: selectedAntibioticStrains.map(as => as.id),
-            advancedSearch,
+            // signs: selectedSigns.map(sign => sign.id),
+            // hormones: selectedHormones.map(hormone => hormone.id),
+            // chemicalComposition: selectedChemicalComposition.map(cc => cc.id),
+            // pharmacology: selectedPharmacology.map(pharma => pharma.id),
+            // antibioticStrains: selectedAntibioticStrains.map(as => as.id),
+            // advancedSearch,
+            options: selectedOptions.map(option => option.id),
             nameSearch,
             nameToSearch,
             type
@@ -151,8 +175,12 @@ export default {
       this.nameToSearch = name;
       this.searchByName();
     },
-    setSelectedSigns(signs) {
-      this.selectedSigns = signs;
+    // setSelectedSigns(signs) {
+    //   this.selectedSigns = signs;
+    //   this.search();
+    // },
+    setSelectedOptions(options) {
+      this.selectedOptions = options;
       this.search();
     },
     setType(type) {
@@ -163,23 +191,23 @@ export default {
       }
 
       this.search();
-    },
-    setSelectedHormones(hormones) {
-      this.selectedHormones = hormones;
-      this.search();
-    },
-    setSelectedChemicalComposition(chemicalComposition) {
-      this.selectedChemicalComposition = chemicalComposition;
-      this.search();
-    },
-    setSelectedPharmacology(pharmacology) {
-      this.selectedPharmacology = pharmacology;
-      this.search();
-    },
-    setSelectedAntibioticStrains(antibioticStrains) {
-      this.selectedAntibioticStrains = antibioticStrains;
-      this.search();
     }
+    // setSelectedHormones(hormones) {
+    //   this.selectedHormones = hormones;
+    //   this.search();
+    // },
+    // setSelectedChemicalComposition(chemicalComposition) {
+    //   this.selectedChemicalComposition = chemicalComposition;
+    //   this.search();
+    // },
+    // setSelectedPharmacology(pharmacology) {
+    //   this.selectedPharmacology = pharmacology;
+    //   this.search();
+    // },
+    // setSelectedAntibioticStrains(antibioticStrains) {
+    //   this.selectedAntibioticStrains = antibioticStrains;
+    //   this.search();
+    // }
   }
 };
 </script>

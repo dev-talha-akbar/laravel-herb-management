@@ -2331,7 +2331,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       editing: false,
       sign_groups: sign_groups,
       sign_groups_values: sign_groups_values,
-      sign_groups_form: sign_groups_form
+      sign_groups_form: sign_groups_form,
+      subId: false
     }, overrides);
 
     return data;
@@ -2505,8 +2506,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["data", "nameSearch"],
+  props: ["data", "nameSearch", "selectedSigns"],
   data: function data() {
     var _this = this;
 
@@ -2518,11 +2534,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }).join(", ");
     };
 
+    var getMatchedSigns = function getMatchedSigns() {
+      return _this.data.items.filter(function (item) {
+        return item.type === "signs_symptoms" && _this.selectedSigns.map(function (sign) {
+          return sign.id;
+        }).indexOf(item.id) > -1;
+      }).map(function (item) {
+        return item.value;
+      });
+    };
+
+    var getNotMatchedSigns = function getNotMatchedSigns() {
+      return _this.data.items.filter(function (item) {
+        return item.type === "signs_symptoms" && _this.selectedSigns.map(function (sign) {
+          return sign.id;
+        }).indexOf(item.id) === -1;
+      }).map(function (item) {
+        return item.value;
+      });
+    };
+
     return _objectSpread({
-      signs_symptoms_count: null
+      signs_symptoms_count: getMatchedSigns().length
     }, this.data, {
       categories: getItemsOfType("categories"),
-      signs: getItemsOfType("signs_symptoms"),
+      matched_signs: getMatchedSigns(),
+      not_matched_signs: getNotMatchedSigns(),
       properties: getItemsOfType("properties"),
       systems_affected: getItemsOfType("systems_affected"),
       actions: getItemsOfType("actions"),
@@ -2644,8 +2681,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["data", "nameSearch"],
+  props: ["data", "nameSearch", "selectedSigns"],
   data: function data() {
     var _this = this;
 
@@ -2657,11 +2709,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }).join(", ");
     };
 
+    var getMatchedSigns = function getMatchedSigns() {
+      return _this.data.items.filter(function (item) {
+        return item.type === "signs_symptoms" && _this.selectedSigns.map(function (sign) {
+          return sign.id;
+        }).indexOf(item.id) > -1;
+      }).map(function (item) {
+        return item.value;
+      });
+    };
+
+    var getNotMatchedSigns = function getNotMatchedSigns() {
+      return _this.data.items.filter(function (item) {
+        return item.type === "signs_symptoms" && _this.selectedSigns.map(function (sign) {
+          return sign.id;
+        }).indexOf(item.id) === -1;
+      }).map(function (item) {
+        return item.value;
+      });
+    };
+
     return _objectSpread({
-      signs_symptoms_count: null
+      signs_symptoms_count: getMatchedSigns().length
     }, this.data, {
       categories: getItemsOfType("categories"),
-      signs: getItemsOfType("signs_symptoms"),
+      matched_signs: getMatchedSigns(),
+      not_matched_signs: getNotMatchedSigns(),
       formula_diagnosis: getItemsOfType("formula_diagnosis"),
       tongue_diagnosis: getItemsOfType("tongue_diagnosis"),
       pulse_diagnosis: getItemsOfType("pulse_diagnosis"),
@@ -2692,11 +2765,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 //
 //
 //
@@ -2743,20 +2819,29 @@ function debounce(func, wait, immediate) {
       loading: false,
       results: [],
       type: "Herb Formula",
-      signs: [],
-      hormones: [],
-      chemicalComposition: [],
-      antibioticStrains: [],
-      pharmacology: [],
-      advancedSearch: false,
+      // signs: [],
+      // hormones: [],
+      // chemicalComposition: [],
+      // antibioticStrains: [],
+      // pharmacology: [],
+      // advancedSearch: false,
       nameSearch: false,
       nameToSearch: "",
-      selectedSigns: [],
-      selectedHormones: [],
-      selectedChemicalComposition: [],
-      selectedPharmacology: [],
-      selectedAntibioticStrains: []
+      // selectedSigns: [],
+      // selectedHormones: [],
+      // selectedChemicalComposition: [],
+      // selectedPharmacology: [],
+      // selectedAntibioticStrains: [],
+      allOptions: [],
+      selectedOptions: []
     };
+  },
+  computed: {
+    selectedSigns: function selectedSigns() {
+      return this.selectedOptions.filter(function (option) {
+        return option.type === "signs_symptoms";
+      });
+    }
   },
   created: function created() {
     this.searchByName = debounce(this.search, 1000);
@@ -2767,27 +2852,33 @@ function debounce(func, wait, immediate) {
     axios.get("/options").then(function (response) {
       return response.data;
     }).then(function (options) {
-      _this.signs = options.signs_symptoms || [];
-      _this.hormones = options.hormones || [];
-      _this.chemicalComposition = options.chemical_composition || [];
-      _this.pharmacology = options.pharmacology || [];
-      _this.antibioticStrains = options.antibiotic_strains || [];
+      // this.signs = options.signs_symptoms || [];
+      // this.hormones = options.hormones || [];
+      // this.chemicalComposition = options.chemical_composition || [];
+      // this.pharmacology = options.pharmacology || [];
+      // this.antibioticStrains = options.antibiotic_strains || [];
+      var signs_symptoms = options.signs_symptoms,
+          hormones = options.hormones,
+          chemical_composition = options.chemical_composition,
+          pharmacology = options.pharmacology,
+          antibiotic_strains = options.antibiotic_strains;
+      _this.allOptions = [].concat(_toConsumableArray(signs_symptoms), _toConsumableArray(hormones || []), _toConsumableArray(chemical_composition || []), _toConsumableArray(pharmacology || []), _toConsumableArray(antibiotic_strains || []));
     });
     window.document.body.classList.add("scroll");
   },
   methods: {
-    toggleAdvancedSearch: function toggleAdvancedSearch() {
-      if (this.advancedSearch) {
-        this.selectedHormones = [];
-        this.selectedChemicalComposition = [];
-        this.selectedPharmacology = [];
-        this.selectedAntibioticStrains = [];
-        this.advancedSearch = false;
-        this.search();
-      } else {
-        this.advancedSearch = true;
-      }
-    },
+    // toggleAdvancedSearch() {
+    //   if (this.advancedSearch) {
+    //     this.selectedHormones = [];
+    //     this.selectedChemicalComposition = [];
+    //     this.selectedPharmacology = [];
+    //     this.selectedAntibioticStrains = [];
+    //     this.advancedSearch = false;
+    //     this.search();
+    //   } else {
+    //     this.advancedSearch = true;
+    //   }
+    // },
     toggleNameSearch: function toggleNameSearch() {
       if (this.nameSearch) {
         this.nameToSearch = "";
@@ -2800,35 +2891,30 @@ function debounce(func, wait, immediate) {
     search: function search() {
       var _this2 = this;
 
-      var selectedSigns = this.selectedSigns,
-          type = this.type,
+      var type = this.type,
           nameSearch = this.nameSearch,
           nameToSearch = this.nameToSearch,
-          selectedHormones = this.selectedHormones,
-          selectedChemicalComposition = this.selectedChemicalComposition,
-          selectedPharmacology = this.selectedPharmacology,
-          selectedAntibioticStrains = this.selectedAntibioticStrains,
-          advancedSearch = this.advancedSearch;
+          selectedOptions = this.selectedOptions; // if (
+      //   (!nameSearch && selectedSigns.length > 0) ||
+      //   (nameSearch && nameToSearch.length > 0) ||
+      //   selectedHormones.length > 0 ||
+      //   selectedChemicalComposition.length > 0 ||
+      //   selectedPharmacology.length > 0 ||
+      //   selectedAntibioticStrains.length > 0
+      // ) {
 
-      if (!nameSearch && selectedSigns.length > 0 || nameSearch && nameToSearch.length > 0 || selectedHormones.length > 0 || selectedChemicalComposition.length > 0 || selectedPharmacology.length > 0 || selectedAntibioticStrains.length > 0) {
+      if (!nameSearch && selectedOptions.length > 0 || nameSearch && nameToSearch.length > 0) {
         this.loading = true;
         axios.post("/search", {
-          signs: selectedSigns.map(function (sign) {
-            return sign.id;
+          // signs: selectedSigns.map(sign => sign.id),
+          // hormones: selectedHormones.map(hormone => hormone.id),
+          // chemicalComposition: selectedChemicalComposition.map(cc => cc.id),
+          // pharmacology: selectedPharmacology.map(pharma => pharma.id),
+          // antibioticStrains: selectedAntibioticStrains.map(as => as.id),
+          // advancedSearch,
+          options: selectedOptions.map(function (option) {
+            return option.id;
           }),
-          hormones: selectedHormones.map(function (hormone) {
-            return hormone.id;
-          }),
-          chemicalComposition: selectedChemicalComposition.map(function (cc) {
-            return cc.id;
-          }),
-          pharmacology: selectedPharmacology.map(function (pharma) {
-            return pharma.id;
-          }),
-          antibioticStrains: selectedAntibioticStrains.map(function (as) {
-            return as.id;
-          }),
-          advancedSearch: advancedSearch,
           nameSearch: nameSearch,
           nameToSearch: nameToSearch,
           type: type
@@ -2847,8 +2933,12 @@ function debounce(func, wait, immediate) {
       this.nameToSearch = name;
       this.searchByName();
     },
-    setSelectedSigns: function setSelectedSigns(signs) {
-      this.selectedSigns = signs;
+    // setSelectedSigns(signs) {
+    //   this.selectedSigns = signs;
+    //   this.search();
+    // },
+    setSelectedOptions: function setSelectedOptions(options) {
+      this.selectedOptions = options;
       this.search();
     },
     setType: function setType(type) {
@@ -2859,23 +2949,23 @@ function debounce(func, wait, immediate) {
       }
 
       this.search();
-    },
-    setSelectedHormones: function setSelectedHormones(hormones) {
-      this.selectedHormones = hormones;
-      this.search();
-    },
-    setSelectedChemicalComposition: function setSelectedChemicalComposition(chemicalComposition) {
-      this.selectedChemicalComposition = chemicalComposition;
-      this.search();
-    },
-    setSelectedPharmacology: function setSelectedPharmacology(pharmacology) {
-      this.selectedPharmacology = pharmacology;
-      this.search();
-    },
-    setSelectedAntibioticStrains: function setSelectedAntibioticStrains(antibioticStrains) {
-      this.selectedAntibioticStrains = antibioticStrains;
-      this.search();
-    }
+    } // setSelectedHormones(hormones) {
+    //   this.selectedHormones = hormones;
+    //   this.search();
+    // },
+    // setSelectedChemicalComposition(chemicalComposition) {
+    //   this.selectedChemicalComposition = chemicalComposition;
+    //   this.search();
+    // },
+    // setSelectedPharmacology(pharmacology) {
+    //   this.selectedPharmacology = pharmacology;
+    //   this.search();
+    // },
+    // setSelectedAntibioticStrains(antibioticStrains) {
+    //   this.selectedAntibioticStrains = antibioticStrains;
+    //   this.search();
+    // }
+
   }
 });
 
@@ -2964,56 +3054,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["type", "signs", "selectedSigns", "advancedSearch", "nameSearch", "nameToSearch", "hormones", "chemicalComposition", "pharmacology", "antibioticStrains", "selectedHormones", "selectedChemicalComposition", "selectedPharmacology", "selectedAntibioticStrains"],
+  props: ["type", "options", "selectedOptions", "nameSearch", "nameToSearch"],
   mounted: function mounted() {
     console.log("Component mounted.");
   },
@@ -3085,9 +3127,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["results", "loading", "type", "nameSearch"],
+  props: ["results", "loading", "type", "nameSearch", "selectedSigns"],
   mounted: function mounted() {
     console.log("Component mounted.");
   },
@@ -41479,7 +41531,44 @@ var render = function() {
               _c("tr", [
                 _c("th", [_vm._v("Signs / Symptoms")]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.signs))])
+                _c("td", [
+                  _c(
+                    "div",
+                    { staticStyle: { position: "relative", left: "-5px" } },
+                    [
+                      _vm._l(_vm.matched_signs, function(sign) {
+                        return _c(
+                          "span",
+                          {
+                            key: sign,
+                            staticClass: "badge badge-info",
+                            staticStyle: {
+                              "font-size": "0.9rem",
+                              "margin-right": "5px"
+                            }
+                          },
+                          [_vm._v(_vm._s(sign))]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _vm._l(_vm.not_matched_signs, function(sign) {
+                        return _c(
+                          "span",
+                          {
+                            key: sign,
+                            staticClass: "badge badge-default",
+                            staticStyle: {
+                              "font-size": "0.9rem",
+                              "margin-right": "5px"
+                            }
+                          },
+                          [_vm._v(_vm._s(sign))]
+                        )
+                      })
+                    ],
+                    2
+                  )
+                ])
               ]),
               _vm._v(" "),
               _vm.view_more
@@ -41704,7 +41793,44 @@ var render = function() {
               _c("tr", [
                 _c("th", [_vm._v("Signs / Symptoms")]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.signs))])
+                _c("td", [
+                  _c(
+                    "div",
+                    { staticStyle: { position: "relative", left: "-5px" } },
+                    [
+                      _vm._l(_vm.matched_signs, function(sign) {
+                        return _c(
+                          "span",
+                          {
+                            key: sign,
+                            staticClass: "badge badge-info",
+                            staticStyle: {
+                              "font-size": "0.9rem",
+                              "margin-right": "5px"
+                            }
+                          },
+                          [_vm._v(_vm._s(sign))]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _vm._l(_vm.not_matched_signs, function(sign) {
+                        return _c(
+                          "span",
+                          {
+                            key: sign,
+                            staticClass: "badge badge-default",
+                            staticStyle: {
+                              "font-size": "0.9rem",
+                              "margin-right": "5px"
+                            }
+                          },
+                          [_vm._v(_vm._s(sign))]
+                        )
+                      })
+                    ],
+                    2
+                  )
+                ])
               ]),
               _vm._v(" "),
               _vm.view_more
@@ -41846,37 +41972,16 @@ var render = function() {
       _c("search-bar", {
         attrs: {
           type: _vm.type,
-          selectedSigns: _vm.selectedSigns,
-          signs: _vm.signs,
-          advancedSearch: _vm.advancedSearch,
-          hormones: _vm.hormones,
-          chemicalComposition: _vm.chemicalComposition,
-          antibioticStrains: _vm.antibioticStrains,
-          pharmacology: _vm.pharmacology,
           nameSearch: _vm.nameSearch,
-          nameToSearch: _vm.nameToSearch
+          nameToSearch: _vm.nameToSearch,
+          options: _vm.allOptions
         },
         on: {
           typeUpdated: function($event) {
             return _vm.setType($event)
           },
-          signsUpdated: function($event) {
-            return _vm.setSelectedSigns($event)
-          },
-          hormonesUpdated: function($event) {
-            return _vm.setSelectedHormones($event)
-          },
-          chemicalCompositionUpdated: function($event) {
-            return _vm.setSelectedChemicalComposition($event)
-          },
-          pharmacologyUpdated: function($event) {
-            return _vm.setSelectedPharmacology($event)
-          },
-          antibioticStrainsUpdated: function($event) {
-            return _vm.setSelectedAntibioticStrains($event)
-          },
-          advancedSearchToggled: function($event) {
-            return _vm.toggleAdvancedSearch()
+          optionsUpdated: function($event) {
+            return _vm.setSelectedOptions($event)
           },
           nameSearchToggled: function($event) {
             return _vm.toggleNameSearch()
@@ -41889,6 +41994,7 @@ var render = function() {
       _vm._v(" "),
       _c("search-results", {
         attrs: {
+          selectedSigns: _vm.selectedSigns,
           nameSearch: _vm.nameSearch,
           type: _vm.type,
           loading: _vm.loading,
@@ -41931,17 +42037,16 @@ var render = function() {
               staticClass: "searchinput",
               attrs: {
                 placeholder:
-                  "Enter signs and symptoms to search for " +
-                  _vm.type.toLowerCase(),
+                  "Select terms to search for " + _vm.type.toLowerCase(),
                 multiple: "",
-                options: _vm.signs,
-                value: _vm.selectedSigns,
+                options: _vm.options,
+                value: _vm.selectedOptions,
                 getOptionLabel: _vm.getOptionLabel,
                 getOptionKey: _vm.getOptionKey
               },
               on: {
                 input: function($event) {
-                  return _vm.$emit("signsUpdated", $event)
+                  return _vm.$emit("optionsUpdated", $event)
                 }
               }
             })
@@ -41981,30 +42086,6 @@ var render = function() {
       1
     ),
     _vm._v(" "),
-    _vm.type === "Herb"
-      ? _c(
-          "a",
-          {
-            staticClass: "advanced-search",
-            attrs: { href: "javascript:void(0)" },
-            on: {
-              click: function($event) {
-                return _vm.$emit("advancedSearchToggled")
-              }
-            }
-          },
-          [
-            _vm._v(
-              _vm._s(
-                !_vm.advancedSearch
-                  ? "More search options"
-                  : "Clear additional search"
-              )
-            )
-          ]
-        )
-      : _vm._e(),
-    _vm._v(" "),
     _c(
       "a",
       {
@@ -42021,88 +42102,11 @@ var render = function() {
           _vm._s(
             !_vm.nameSearch
               ? "Search for a specific " + _vm.type.toLowerCase()
-              : "Search by signs"
+              : "Search by terms"
           )
         )
       ]
-    ),
-    _vm._v(" "),
-    _vm.advancedSearch
-      ? _c(
-          "div",
-          { staticClass: "d-flex" },
-          [
-            _c("v-select", {
-              staticClass: "searchinput",
-              attrs: {
-                placeholder: "Hormones",
-                multiple: "",
-                options: _vm.hormones,
-                value: _vm.selectedHormones,
-                getOptionLabel: _vm.getOptionLabel,
-                getOptionKey: _vm.getOptionKey
-              },
-              on: {
-                input: function($event) {
-                  return _vm.$emit("hormonesUpdated", $event)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("v-select", {
-              staticClass: "searchinput",
-              attrs: {
-                placeholder: "Chemical Composition",
-                multiple: "",
-                options: _vm.chemicalComposition,
-                value: _vm.selectedChemicalComposition,
-                getOptionLabel: _vm.getOptionLabel,
-                getOptionKey: _vm.getOptionKey
-              },
-              on: {
-                input: function($event) {
-                  return _vm.$emit("chemicalCompositionUpdated", $event)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("v-select", {
-              staticClass: "searchinput",
-              attrs: {
-                placeholder: "Pharmacology",
-                multiple: "",
-                options: _vm.pharmacology,
-                value: _vm.selectedPharmacology,
-                getOptionLabel: _vm.getOptionLabel,
-                getOptionKey: _vm.getOptionKey
-              },
-              on: {
-                input: function($event) {
-                  return _vm.$emit("pharmacologyUpdated", $event)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("v-select", {
-              staticClass: "searchinput",
-              attrs: {
-                placeholder: "Antibiotic Strains",
-                multiple: "",
-                options: _vm.antibioticStrains,
-                value: _vm.selectedAntibioticStrains,
-                getOptionLabel: _vm.getOptionLabel,
-                getOptionKey: _vm.getOptionKey
-              },
-              on: {
-                input: function($event) {
-                  return _vm.$emit("antibioticStrainsUpdated", $event)
-                }
-              }
-            })
-          ],
-          1
-        )
-      : _vm._e()
+    )
   ])
 }
 var staticRenderFns = []
@@ -42183,6 +42187,7 @@ var render = function() {
                               _vm.type === "Herb"
                                 ? _c("herb", {
                                     attrs: {
+                                      selectedSigns: _vm.selectedSigns,
                                       data: result,
                                       nameSearch: _vm.nameSearch
                                     }
@@ -42192,6 +42197,7 @@ var render = function() {
                               _vm.type === "Herb Formula"
                                 ? _c("herb-formula", {
                                     attrs: {
+                                      selectedSigns: _vm.selectedSigns,
                                       data: result,
                                       nameSearch: _vm.nameSearch
                                     }

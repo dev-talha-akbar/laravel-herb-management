@@ -27,14 +27,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        if (\Auth::check()) {
+            return view('home');
+        } else {
+            return view('welcome');
+        }
     }
 
     public function submission($id)
     {
         $submission = Submission::findOrFail($id);
 
-        return view('home')->with('submission', $submission);
+        return view('welcome')->with('submission', $submission);
     }
 
     /**
@@ -121,23 +125,23 @@ class HomeController extends Controller
      */
     public function search(Request $request)
     {
-        $signs = $request->signs;
-        $hormones = $request->hormones;
-        $chemicalComposition = $request->chemicalComposition;
-        $pharmacology = $request->pharmacology;
-        $antibioticStrains = $request->antibioticStrains;
-        $advancedSearch = $request->advancedSearch;
+        $options = $request->options;
+        // $hormones = $request->hormones;
+        // $chemicalComposition = $request->chemicalComposition;
+        // $pharmacology = $request->pharmacology;
+        // $antibioticStrains = $request->antibioticStrains;
+        // $advancedSearch = $request->advancedSearch;
         $nameSearch = $request->nameSearch;
-        $nameToSearch = $request->nameToSearch;
+        $nameToSearch = strtolower($request->nameToSearch);
         $results = null;
         $type = $request->type;
         $typeClass = $request->type === 'Herb' ? Herb::class : HerbFormula::class;
 
-        if (!$nameSearch && count($signs) > 0) {
-            $results = $typeClass::withCount(['signs_symptoms' => function ($q) use ($signs) {
-                $q->whereIn('id', $signs);
-            }])->whereHas('signs_symptoms', function ($q) use ($signs) {
-                $q->whereIn('id', $signs);
+        if (!$nameSearch && count($options) > 0) {
+            $results = $typeClass::withCount(['items' => function ($q) use ($options) {
+                $q->whereIn('id', $options);
+            }])->whereHas('items', function ($q) use ($options) {
+                $q->whereIn('id', $options);
             });
         } else if ($nameSearch && isset($nameToSearch)) {
             $results = $typeClass::where(function ($q) use ($nameSearch, $nameToSearch, $type) {
@@ -147,43 +151,43 @@ class HomeController extends Controller
                     $cols = array_merge($cols, ['pharmaceutical_name', 'literal_name']);
                 }
 
-                $q->where(\DB::raw('1'), \DB::raw('1'));
+                $q->where(\DB::raw('1'), '<>', \DB::raw('1'));
 
                 foreach ($cols as $col) {
-                    $q->orWhere($col, 'LIKE', "%{$nameToSearch}%");
+                    $q->orWhere(\DB::raw("$col COLLATE UTF8MB4_GENERAL_CI"), 'LIKE', "%{$nameToSearch}%");
                 }
             });
         } else {
             $results = $typeClass::where(\DB::raw('1'), \DB::raw('1'));
         }
 
-        if ($advancedSearch) {
-            if (count($hormones) > 0) {
-                $results = $results
-                    ->whereHas('hormones', function ($q) use ($hormones) {
-                        $q->whereIn('id', $hormones);
-                    });
-            }
+        // if ($advancedSearch) {
+        //     if (count($hormones) > 0) {
+        //         $results = $results
+        //             ->whereHas('hormones', function ($q) use ($hormones) {
+        //                 $q->whereIn('id', $hormones);
+        //             });
+        //     }
 
-            if (count($chemicalComposition) > 0) {
-                $results = $results
-                    ->whereHas('chemical_composition', function ($q) use ($chemicalComposition) {
-                        $q->whereIn('id', $chemicalComposition);
-                    });
-            }
+        //     if (count($chemicalComposition) > 0) {
+        //         $results = $results
+        //             ->whereHas('chemical_composition', function ($q) use ($chemicalComposition) {
+        //                 $q->whereIn('id', $chemicalComposition);
+        //             });
+        //     }
 
-            if (count($pharmacology) > 0) {
-                $results = $results->whereHas('pharmacology', function ($q) use ($pharmacology) {
-                    $q->whereIn('id', $pharmacology);
-                });
-            }
+        //     if (count($pharmacology) > 0) {
+        //         $results = $results->whereHas('pharmacology', function ($q) use ($pharmacology) {
+        //             $q->whereIn('id', $pharmacology);
+        //         });
+        //     }
 
-            if (count($antibioticStrains) > 0) {
-                $results = $results->whereHas('antibiotic_strains', function ($q) use ($antibioticStrains) {
-                    $q->whereIn('id', $antibioticStrains);
-                });
-            }
-        }
+        //     if (count($antibioticStrains) > 0) {
+        //         $results = $results->whereHas('antibiotic_strains', function ($q) use ($antibioticStrains) {
+        //             $q->whereIn('id', $antibioticStrains);
+        //         });
+        //     }
+        // }
 
         if ($request->type === 'Herb Formula') {
             $results = $results->with('herbs');
@@ -193,8 +197,8 @@ class HomeController extends Controller
 
         $results = $results->with('items');
 
-        if (!$nameSearch && count($signs) > 0) {
-            $results = $results->orderBy('signs_symptoms_count', 'desc');
+        if (!$nameSearch && count($options) > 0) {
+            $results = $results->orderBy('items_count', 'desc');
         }
 
         $results = $results->get();
