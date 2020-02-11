@@ -80,7 +80,7 @@ class HomeController extends Controller
         $result = $this->searchForSigns($request->signsSelected);
 
         $submission = Submission::create(['form' => $request->form, 'result' => json_encode($result), 'status' => 1]);
-
+        \Session::flash('success', 'We have received your submission successfully!');
         return response()->json($submission->id);
     }
 

@@ -16,6 +16,7 @@
       :type="type"
       :loading="loading"
       :results="results"
+      :smallNoResults="false"
     />
   </div>
 </template>

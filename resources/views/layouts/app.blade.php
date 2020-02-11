@@ -91,6 +91,18 @@
         </nav>
 
         <main class="py-4">
+            @if(Session::has('success'))
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-success" style="margin-bottom: 40px;">
+                            <b>We have received your Patient Form. One of our representatives will be in touch with you.</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @endif
             @yield('content')
         </main>
     </div>

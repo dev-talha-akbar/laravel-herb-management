@@ -108,7 +108,11 @@ export default {
         .filter(
           item =>
             item.type === "signs_symptoms" &&
-            this.selectedSigns.map(sign => sign.id).indexOf(item.id) > -1
+            this.selectedSigns
+              .map(sign =>
+                typeof sign === "string" ? parseInt(sign, 10) : sign.id
+              )
+              .indexOf(item.id) > -1
         )
         .map(item => item.value);
     };
@@ -118,7 +122,11 @@ export default {
         .filter(
           item =>
             item.type === "signs_symptoms" &&
-            this.selectedSigns.map(sign => sign.id).indexOf(item.id) === -1
+            this.selectedSigns
+              .map(sign =>
+                typeof sign === "string" ? parseInt(sign, 10) : sign.id
+              )
+              .indexOf(item.id) === -1
         )
         .map(item => item.value);
     };

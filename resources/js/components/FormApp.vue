@@ -5,15 +5,24 @@
       <div class="row">
         <div class="col-6">
           <h3>Herbs</h3>
-          <SearchResults :results="result.herbs" type="Herb" :nameSearch="false" :loading="false" />
+          <SearchResults
+            :selectedSigns="signsSelected"
+            :results="result.herbs"
+            type="Herb"
+            :nameSearch="false"
+            :loading="false"
+            :smallNoResults="true"
+          />
         </div>
         <div class="col-6">
           <h3>Herb Formulas</h3>
           <SearchResults
             :results="result.herb_formulas"
+            :selectedSigns="signsSelected"
             type="Herb Formula"
             :nameSearch="false"
             :loading="false"
+            :smallNoResults="true"
           />
         </div>
       </div>
@@ -476,44 +485,55 @@ export default {
       q5: [],
       submitting: false,
       editing: false,
+      subId: false,
       sign_groups,
       sign_groups_values,
       sign_groups_form,
-      subId: false,
       ...overrides
     };
 
     return data;
   },
-  methods: {
-    newSubmission() {
-      const { submitting, editing, subId, ...form } = this.$data;
-      let $p;
-
-      const signsSelected = this.sign_groups.reduce((signsSelected, group) => {
+  computed: {
+    signsSelected() {
+      console.log(
+        this.sign_groups.reduce((signsSelected, group) => {
+          return [...signsSelected, ...this.sign_groups_form[group.key]];
+        }, [])
+      );
+      return this.sign_groups.reduce((signsSelected, group) => {
         return [...signsSelected, ...this.sign_groups_form[group.key]];
       }, []);
+    }
+  },
+  methods: {
+    newSubmission() {
+      if (confirm("Do you really want to submit your Patient Form?")) {
+        const { submitting, editing, subId, ...form } = this.$data;
+        let $p;
 
-      this.submitting = true;
+        this.submitting = true;
 
-      if (editing) {
-        $p = axios.put("/submission/" + subId, {
-          form: JSON.stringify(form),
-          signsSelected
-        });
-      } else {
-        $p = axios
-          .post("/submit", {
-            form: JSON.stringify(form)
-          })
-          .then(response => {
-            window.location.href = "/submission/" + response.data;
+        if (editing) {
+          $p = axios.put("/submission/" + subId, {
+            form: JSON.stringify(form),
+            signsSelected: this.signsSelected
           });
-      }
+        } else {
+          $p = axios
+            .post("/submit", {
+              form: JSON.stringify(form),
+              signsSelected: this.signsSelected
+            })
+            .then(response => {
+              window.location.href = "/submission/" + response.data;
+            });
+        }
 
-      $p.finally(() => {
-        this.submitting = false;
-      });
+        $p.finally(() => {
+          this.submitting = false;
+        });
+      }
     }
   }
 };

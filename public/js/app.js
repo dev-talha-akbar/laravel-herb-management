@@ -1839,6 +1839,10 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SearchResults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SearchResults */ "./resources/js/components/SearchResults.vue");
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -1847,16 +1851,21 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2329,46 +2338,58 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       q5: [],
       submitting: false,
       editing: false,
+      subId: false,
       sign_groups: sign_groups,
       sign_groups_values: sign_groups_values,
-      sign_groups_form: sign_groups_form,
-      subId: false
+      sign_groups_form: sign_groups_form
     }, overrides);
 
     return data;
   },
-  methods: {
-    newSubmission: function newSubmission() {
+  computed: {
+    signsSelected: function signsSelected() {
       var _this = this;
 
-      var _this$$data = this.$data,
-          submitting = _this$$data.submitting,
-          editing = _this$$data.editing,
-          subId = _this$$data.subId,
-          form = _objectWithoutProperties(_this$$data, ["submitting", "editing", "subId"]);
-
-      var $p;
-      var signsSelected = this.sign_groups.reduce(function (signsSelected, group) {
+      console.log(this.sign_groups.reduce(function (signsSelected, group) {
+        return [].concat(_toConsumableArray(signsSelected), _toConsumableArray(_this.sign_groups_form[group.key]));
+      }, []));
+      return this.sign_groups.reduce(function (signsSelected, group) {
         return [].concat(_toConsumableArray(signsSelected), _toConsumableArray(_this.sign_groups_form[group.key]));
       }, []);
-      this.submitting = true;
+    }
+  },
+  methods: {
+    newSubmission: function newSubmission() {
+      var _this2 = this;
 
-      if (editing) {
-        $p = axios.put("/submission/" + subId, {
-          form: JSON.stringify(form),
-          signsSelected: signsSelected
-        });
-      } else {
-        $p = axios.post("/submit", {
-          form: JSON.stringify(form)
-        }).then(function (response) {
-          window.location.href = "/submission/" + response.data;
+      if (confirm("Do you really want to submit your Patient Form?")) {
+        var _this$$data = this.$data,
+            submitting = _this$$data.submitting,
+            editing = _this$$data.editing,
+            subId = _this$$data.subId,
+            form = _objectWithoutProperties(_this$$data, ["submitting", "editing", "subId"]);
+
+        var $p;
+        this.submitting = true;
+
+        if (editing) {
+          $p = axios.put("/submission/" + subId, {
+            form: JSON.stringify(form),
+            signsSelected: this.signsSelected
+          });
+        } else {
+          $p = axios.post("/submit", {
+            form: JSON.stringify(form),
+            signsSelected: this.signsSelected
+          }).then(function (response) {
+            window.location.href = "/submission/" + response.data;
+          });
+        }
+
+        $p["finally"](function () {
+          _this2.submitting = false;
         });
       }
-
-      $p["finally"](function () {
-        _this.submitting = false;
-      });
     }
   }
 });
@@ -2537,7 +2558,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var getMatchedSigns = function getMatchedSigns() {
       return _this.data.items.filter(function (item) {
         return item.type === "signs_symptoms" && _this.selectedSigns.map(function (sign) {
-          return sign.id;
+          return typeof sign === "string" ? parseInt(sign, 10) : sign.id;
         }).indexOf(item.id) > -1;
       }).map(function (item) {
         return item.value;
@@ -2547,7 +2568,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var getNotMatchedSigns = function getNotMatchedSigns() {
       return _this.data.items.filter(function (item) {
         return item.type === "signs_symptoms" && _this.selectedSigns.map(function (sign) {
-          return sign.id;
+          return typeof sign === "string" ? parseInt(sign, 10) : sign.id;
         }).indexOf(item.id) === -1;
       }).map(function (item) {
         return item.value;
@@ -2712,7 +2733,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var getMatchedSigns = function getMatchedSigns() {
       return _this.data.items.filter(function (item) {
         return item.type === "signs_symptoms" && _this.selectedSigns.map(function (sign) {
-          return sign.id;
+          return typeof sign === "string" ? parseInt(sign, 10) : sign.id;
         }).indexOf(item.id) > -1;
       }).map(function (item) {
         return item.value;
@@ -2722,7 +2743,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var getNotMatchedSigns = function getNotMatchedSigns() {
       return _this.data.items.filter(function (item) {
         return item.type === "signs_symptoms" && _this.selectedSigns.map(function (sign) {
-          return sign.id;
+          return typeof sign === "string" ? parseInt(sign, 10) : sign.id;
         }).indexOf(item.id) === -1;
       }).map(function (item) {
         return item.value;
@@ -2773,6 +2794,7 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
+//
 //
 //
 //
@@ -3137,9 +3159,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["results", "loading", "type", "nameSearch", "selectedSigns"],
+  props: ["results", "loading", "type", "nameSearch", "selectedSigns", "smallNoResults"],
   mounted: function mounted() {
     console.log("Component mounted.");
   },
@@ -7665,7 +7696,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".card[data-v-6db515d3] {\n  margin-bottom: 20px;\n}\n.searchresults[data-v-6db515d3] {\n  padding: 50px 0 0 0;\n}\n.noresults[data-v-6db515d3] {\n  color: #5acfb2;\n  text-align: center;\n}\n.noresults + img[data-v-6db515d3] {\n  margin: auto;\n  display: block;\n}", ""]);
+exports.push([module.i, ".card[data-v-6db515d3] {\n  margin-bottom: 20px;\n}\n.searchresults[data-v-6db515d3] {\n  padding: 50px 0 0 0;\n}\n.noresults[data-v-6db515d3] {\n  color: #5acfb2;\n  text-align: center;\n}\n.noresults + img[data-v-6db515d3] {\n  margin: auto;\n  display: block;\n}\n.noresults.noresults-small[data-v-6db515d3] {\n  font-size: 14px;\n}\n.noresults.noresults-small + img[data-v-6db515d3] {\n  max-width: 120px;\n}", ""]);
 
 // exports
 
@@ -39312,10 +39343,12 @@ var render = function() {
                 _vm._v(" "),
                 _c("SearchResults", {
                   attrs: {
+                    selectedSigns: _vm.signsSelected,
                     results: _vm.result.herbs,
                     type: "Herb",
                     nameSearch: false,
-                    loading: false
+                    loading: false,
+                    smallNoResults: true
                   }
                 })
               ],
@@ -39331,9 +39364,11 @@ var render = function() {
                 _c("SearchResults", {
                   attrs: {
                     results: _vm.result.herb_formulas,
+                    selectedSigns: _vm.signsSelected,
                     type: "Herb Formula",
                     nameSearch: false,
-                    loading: false
+                    loading: false,
+                    smallNoResults: true
                   }
                 })
               ],
@@ -41998,7 +42033,8 @@ var render = function() {
           nameSearch: _vm.nameSearch,
           type: _vm.type,
           loading: _vm.loading,
-          results: _vm.results
+          results: _vm.results,
+          smallNoResults: false
         }
       })
     ],
@@ -42153,9 +42189,14 @@ var render = function() {
               ? [
                   _c("zoom-center-transition", [
                     _c("div", [
-                      _c("h2", { staticClass: "noresults" }, [
-                        _vm._v("Nothing to show just yet")
-                      ]),
+                      _c(
+                        "h2",
+                        {
+                          staticClass: "noresults",
+                          class: { "noresults-small": _vm.smallNoResults }
+                        },
+                        [_vm._v("Nothing to show just yet")]
+                      ),
                       _vm._v(" "),
                       _c("img", {
                         staticClass: "noresults-img",

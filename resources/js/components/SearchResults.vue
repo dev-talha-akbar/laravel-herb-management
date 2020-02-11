@@ -9,7 +9,10 @@
       <template v-if="results.length === 0">
         <zoom-center-transition>
           <div>
-            <h2 class="noresults">Nothing to show just yet</h2>
+            <h2
+              class="noresults"
+              :class="{ 'noresults-small' : smallNoResults }"
+            >Nothing to show just yet</h2>
             <img class="noresults-img" src="/img/no-results.svg" width="300" />
           </div>
         </zoom-center-transition>
@@ -53,12 +56,25 @@
   margin: auto;
   display: block;
 }
+.noresults.noresults-small {
+  font-size: 14px;
+}
+.noresults.noresults-small + img {
+  max-width: 120px;
+}
 </style>
 <script>
 import { ZoomCenterTransition, FadeTransition } from "vue2-transitions";
 
 export default {
-  props: ["results", "loading", "type", "nameSearch", "selectedSigns"],
+  props: [
+    "results",
+    "loading",
+    "type",
+    "nameSearch",
+    "selectedSigns",
+    "smallNoResults"
+  ],
   mounted() {
     console.log("Component mounted.");
   },
