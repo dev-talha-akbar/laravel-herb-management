@@ -2356,6 +2356,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.sign_groups.reduce(function (signsSelected, group) {
         return [].concat(_toConsumableArray(signsSelected), _toConsumableArray(_this.sign_groups_form[group.key]));
       }, []);
+    },
+    name: function name() {
+      return "".concat(this.pfname, " ").concat(this.pmname, " ").concat(this.plname);
     }
   },
   methods: {
@@ -2375,12 +2378,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if (editing) {
           $p = axios.put("/submission/" + subId, {
             form: JSON.stringify(form),
-            signsSelected: this.signsSelected
+            signsSelected: this.signsSelected,
+            name: this.name
           });
         } else {
           $p = axios.post("/submit", {
             form: JSON.stringify(form),
-            signsSelected: this.signsSelected
+            signsSelected: this.signsSelected,
+            name: this.name
           }).then(function (response) {
             window.location.href = "/submission/" + response.data;
           });

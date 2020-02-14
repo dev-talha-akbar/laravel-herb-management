@@ -504,6 +504,9 @@ export default {
       return this.sign_groups.reduce((signsSelected, group) => {
         return [...signsSelected, ...this.sign_groups_form[group.key]];
       }, []);
+    },
+    name() {
+      return `${this.pfname} ${this.pmname} ${this.plname}`;
     }
   },
   methods: {
@@ -517,13 +520,15 @@ export default {
         if (editing) {
           $p = axios.put("/submission/" + subId, {
             form: JSON.stringify(form),
-            signsSelected: this.signsSelected
+            signsSelected: this.signsSelected,
+            name: this.name
           });
         } else {
           $p = axios
             .post("/submit", {
               form: JSON.stringify(form),
-              signsSelected: this.signsSelected
+              signsSelected: this.signsSelected,
+              name: this.name
             })
             .then(response => {
               window.location.href = "/submission/" + response.data;

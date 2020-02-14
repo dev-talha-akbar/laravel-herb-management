@@ -79,7 +79,7 @@ class HomeController extends Controller
     {
         $result = $this->searchForSigns($request->signsSelected);
 
-        $submission = Submission::create(['form' => $request->form, 'result' => json_encode($result), 'status' => 1]);
+        $submission = Submission::create(['form' => $request->form, 'result' => json_encode($result), 'name' => $request->name, 'status' => 1]);
         \Session::flash('success', 'We have received your submission successfully!');
         return response()->json($submission->id);
     }
@@ -92,7 +92,8 @@ class HomeController extends Controller
 
         $submission->update([
             'form' => $request->form,
-            'result' => json_encode($result)
+            'result' => json_encode($result),
+            'name' => $request->name
         ]);
 
         return response()->json(true);

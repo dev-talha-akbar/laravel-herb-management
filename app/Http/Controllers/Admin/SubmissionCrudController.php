@@ -35,12 +35,9 @@ class SubmissionCrudController extends CrudController
 
         $this->crud->setColumns([
             [
-                'name' => 'id',
-                'label' => "Submission ID",
-            ], [
-                'name' => 'status',
-                'label' => "Status",
-            ],
+                'name' => 'name',
+                'label' => "Patient Name",
+            ]
         ]);
     }
 
