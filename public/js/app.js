@@ -7704,7 +7704,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".herb .herbdetails[data-v-7e048858] {\n  margin-left: -5px;\n}\n.herb .formulatag[data-v-7e048858] {\n  font-weight: normal;\n  position: relative;\n  top: -1px;\n}\n.herb .herbconstituents[data-v-7e048858] {\n  margin-top: 5px;\n}\n.herb .herbconstituents .herbconstituentimages[data-v-7e048858] {\n  margin: 0 -4px;\n  display: -webkit-box;\n  display: flex;\n}\n.herb .constituent[data-v-7e048858] {\n  margin: 4px;\n}\n.herb .constituent img[data-v-7e048858] {\n  width: 140px;\n  height: 140px;\n}", ""]);
+exports.push([module.i, ".herb .herbdetails[data-v-7e048858] {\n  margin-left: -5px;\n}\n.herb .formulatag[data-v-7e048858] {\n  font-weight: normal;\n  position: relative;\n  top: -1px;\n}\n.herb .herbconstituents[data-v-7e048858] {\n  margin-top: 5px;\n}\n.herb .herbconstituents .herbconstituentimages[data-v-7e048858] {\n  margin: 0 -4px;\n  display: -webkit-box;\n  display: flex;\n  flex-wrap: wrap;\n}\n.herb .constituent[data-v-7e048858] {\n  margin: 4px;\n}\n.herb .constituent img[data-v-7e048858] {\n  width: 140px;\n  height: 140px;\n}", ""]);
 
 // exports
 
@@ -7723,7 +7723,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".herbformula[data-v-7f56bb1e] {\n  margin-left: 20px;\n}\n.herbformula .formuladetails[data-v-7f56bb1e] {\n  margin-left: -5px;\n}\n.herbformula .formulatag[data-v-7f56bb1e] {\n  font-weight: normal;\n  position: relative;\n  top: -1px;\n}\n.herbformula .herbsused[data-v-7f56bb1e] {\n  margin-top: 5px;\n}\n.herbformula .herbsused .herbsusedimages[data-v-7f56bb1e] {\n  margin: 0 -4px;\n  display: -webkit-box;\n  display: flex;\n}\n.herbformula .herb[data-v-7f56bb1e] {\n  display: -webkit-box;\n  display: flex;\n  font-size: 11px;\n  margin: 4px;\n}\n.herbformula .herb img[data-v-7f56bb1e] {\n  width: 140px;\n  height: 140px;\n  margin-right: 4px;\n}\n.herbformula .herb img[src=\"/img/no-preview.png\"][data-v-7f56bb1e] {\n  border: 1px solid #ccc;\n}", ""]);
+exports.push([module.i, ".herbformula[data-v-7f56bb1e] {\n  margin-left: 20px;\n}\n.herbformula .formuladetails[data-v-7f56bb1e] {\n  margin-left: -5px;\n}\n.herbformula .formulatag[data-v-7f56bb1e] {\n  font-weight: normal;\n  position: relative;\n  top: -1px;\n}\n.herbformula .herbsused[data-v-7f56bb1e] {\n  margin-top: 5px;\n}\n.herbformula .herbsused .herbsusedimages[data-v-7f56bb1e] {\n  margin: 0 -4px;\n  display: -webkit-box;\n  display: flex;\n  flex-wrap: wrap;\n}\n.herbformula .herb[data-v-7f56bb1e] {\n  display: -webkit-box;\n  display: flex;\n  font-size: 11px;\n  margin: 4px;\n}\n.herbformula .herb img[data-v-7f56bb1e] {\n  width: 140px;\n  height: 140px;\n  margin-right: 4px;\n}\n.herbformula .herb img[src=\"/img/no-preview.png\"][data-v-7f56bb1e] {\n  border: 1px solid #ccc;\n}", ""]);
 
 // exports
 
@@ -42961,7 +42961,7 @@ var render = function() {
                     _c("img", {
                       attrs: { src: constituent },
                       on: {
-                        index: function($event) {
+                        click: function($event) {
                           _vm.index = imageIndex + 1
                         }
                       }

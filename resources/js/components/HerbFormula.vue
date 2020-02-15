@@ -206,6 +206,7 @@ export default {
         .herbsusedimages {
             margin: 0 -4px;
             display: flex;
+            flex-wrap: wrap;
         }
     }
     .herb {

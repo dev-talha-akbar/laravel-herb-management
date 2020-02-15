@@ -139,7 +139,7 @@
                             :key="constituent"
                         >
                             <img
-                                @index="index = imageIndex + 1"
+                                @click="index = imageIndex + 1"
                                 :src="constituent"
                             />
                         </div>
@@ -261,6 +261,7 @@ export default {
         .herbconstituentimages {
             margin: 0 -4px;
             display: flex;
+            flex-wrap: wrap;
         }
     }
     .constituent {
