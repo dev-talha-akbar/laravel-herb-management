@@ -54,7 +54,7 @@
           <div class="form-group row">
             <label for="pdob" class="col-md-4 col-form-label">Patient's Date of Birth</label>
             <div class="col-md-8">
-              <input type="text" id="pdob" v-model="pdob" class="form-control" required />
+              <input type="date" id="pdob" v-model="pdob" class="form-control" required />
             </div>
           </div>
         </div>

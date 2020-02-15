@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "vue-cool-lightbox": "^1.0.10",
         "vue-select": "^3.2.0",
         "vue2-transitions": "^0.3.0"
     }

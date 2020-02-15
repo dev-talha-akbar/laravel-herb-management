@@ -20,8 +20,10 @@ window.Vue = require("vue");
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 import vSelect from "vue-select";
+import CoolLightBox from "vue-cool-lightbox";
 
 Vue.component("v-select", vSelect);
+Vue.component("cool-lightbox", CoolLightBox);
 Vue.component("search-app", require("./components/SearchApp.vue").default);
 Vue.component("search-bar", require("./components/SearchBar.vue").default);
 Vue.component(
