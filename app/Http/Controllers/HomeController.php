@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Item;
 use App\Models\Herb;
 use App\Models\HerbFormula;
+use App\Models\Item;
 use App\Models\Submission;
 use DB;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -30,15 +30,22 @@ class HomeController extends Controller
         if (\Auth::check()) {
             return view('home');
         } else {
-            return view('welcome');
+            return view('welcome')->with('is_admin', false);
         }
     }
 
     public function submission($id)
     {
         $submission = Submission::findOrFail($id);
+        $user = \Auth::user();
 
-        return view('welcome')->with('submission', $submission);
+        if ($user) {
+            $is_admin = $user->hasRole('Admin') || $user->hasRole('Super Admin');
+        } else {
+            $is_admin = false;
+        }
+
+        return view('welcome')->with('submission', $submission)->with('is_admin', $is_admin);
     }
 
     /**
@@ -53,7 +60,7 @@ class HomeController extends Controller
             'hormones',
             'chemical_composition',
             'pharmacology',
-            'antibiotic_strains'
+            'antibiotic_strains',
         ])->get();
 
         return response()->json($options->groupBy('type'));
@@ -65,12 +72,12 @@ class HomeController extends Controller
 
         if ($sign_symptom) {
             DB::table('sign_symptom_groups')->where('item_id', $id)->update([
-                'group' => $request->group
+                'group' => $request->group,
             ]);
         } else {
             DB::table('sign_symptom_groups')->insert([
                 'item_id' => $id,
-                'group' => $request->group
+                'group' => $request->group,
             ]);
         }
     }
@@ -93,7 +100,7 @@ class HomeController extends Controller
         $submission->update([
             'form' => $request->form,
             'result' => json_encode($result),
-            'name' => $request->name
+            'name' => $request->name,
         ]);
 
         return response()->json(true);
@@ -115,7 +122,7 @@ class HomeController extends Controller
 
         return [
             'herbs' => $herb_results,
-            'herb_formulas' => $herb_formula_results
+            'herb_formulas' => $herb_formula_results,
         ];
     }
 

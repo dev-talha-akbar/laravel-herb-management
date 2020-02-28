@@ -2278,12 +2278,63 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     SearchResults: _SearchResults__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ["signs", "groups"],
+  props: ["signs", "groups", "items", "isadmin"],
   data: function data() {
     var overrides = {};
 
@@ -2316,7 +2367,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return sign_groups_form;
     }, {});
 
-    var data = _objectSpread({
+    var data = _objectSpread(_defineProperty({
       plname: "",
       pfname: "",
       pmname: "",
@@ -2336,13 +2387,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       q3: [],
       q4: [],
       q5: [],
+      selectedHormones: [],
+      selectedChemicalComposition: [],
+      selectedPharmacology: [],
+      selectedAntibioticStrains: [],
+      pharmacology: this.items.filter(function (item) {
+        return item.type === "pharmacology";
+      }),
+      hormones: this.items.filter(function (item) {
+        return item.type === "hormones";
+      }),
+      chemicalComposition: this.items.filter(function (item) {
+        return item.type === "chemical_composition";
+      }),
+      antibioticStrains: this.items.filter(function (item) {
+        return item.type === "antibiotic_strains";
+      }),
       submitting: false,
       editing: false,
       subId: false,
       sign_groups: sign_groups,
       sign_groups_values: sign_groups_values,
       sign_groups_form: sign_groups_form
-    }, overrides);
+    }, "subId", null), overrides);
 
     return data;
   },
@@ -2362,6 +2429,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   methods: {
+    getOptionLabel: function getOptionLabel(option) {
+      return option.value;
+    },
+    getOptionKey: function getOptionKey(option) {
+      return option.id;
+    },
     newSubmission: function newSubmission() {
       var _this2 = this;
 
@@ -2370,7 +2443,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             submitting = _this$$data.submitting,
             editing = _this$$data.editing,
             subId = _this$$data.subId,
-            form = _objectWithoutProperties(_this$$data, ["submitting", "editing", "subId"]);
+            pharmacology = _this$$data.pharmacology,
+            hormones = _this$$data.hormones,
+            chemicalComposition = _this$$data.chemicalComposition,
+            antibioticStrains = _this$$data.antibioticStrains,
+            form = _objectWithoutProperties(_this$$data, ["submitting", "editing", "subId", "pharmacology", "hormones", "chemicalComposition", "antibioticStrains"]);
 
         var $p;
         this.submitting = true;
@@ -7780,7 +7857,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nform {\n  padding-bottom: 200px;\n}\n.form-group > label {\n  font-size: 0.8rem;\n  margin-top: 0.25rem;\n  font-weight: bold;\n}\n.form-check-inline {\n  margin-right: 5rem;\n}\n.two-col {\n  -webkit-column-count: 2;\n  -moz-column-count: 2;\n  column-count: 2;\n}\n.form > .two-col .form-group {\n  display: inline-block;\n  width: 100%;\n}\n.btn-submit {\n  margin-top: 80px;\n}\n.searchresults {\n  padding-top: 20px !important;\n}\n.result {\n  margin-bottom: 30px;\n}\n", ""]);
+exports.push([module.i, "\nform {\r\n  padding-bottom: 200px;\n}\n.form-group > label {\r\n  font-size: 0.8rem;\r\n  margin-top: 0.25rem;\r\n  font-weight: bold;\n}\n.form-check-inline {\r\n  margin-right: 5rem;\n}\n.two-col {\r\n  -webkit-column-count: 2;\r\n  -moz-column-count: 2;\r\n  column-count: 2;\n}\n.form > .two-col .form-group {\r\n  display: inline-block;\r\n  width: 100%;\n}\n.btn-submit {\r\n  margin-top: 80px;\n}\n.searchresults {\r\n  padding-top: 20px !important;\n}\n.result {\r\n  margin-bottom: 30px;\n}\n.required-asterik {\r\n  color: red;\n}\r\n", ""]);
 
 // exports
 
@@ -40579,14 +40656,7 @@ var render = function() {
       },
       [
         _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            {
-              staticClass: "col-md-2 col-form-label",
-              attrs: { for: "plname" }
-            },
-            [_vm._v("Patient's Last Name")]
-          ),
+          _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "col-md-10" }, [
             _c("input", {
@@ -40614,14 +40684,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            {
-              staticClass: "col-md-2 col-form-label",
-              attrs: { for: "pfname" }
-            },
-            [_vm._v("Patient's First Name")]
-          ),
+          _vm._m(1),
           _vm._v(" "),
           _c("div", { staticClass: "col-md-10" }, [
             _c("input", {
@@ -40671,7 +40734,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { type: "text", id: "pmname", required: "" },
+                  attrs: { type: "text", id: "pmname" },
                   domProps: { value: _vm.pmname },
                   on: {
                     input: function($event) {
@@ -40688,14 +40751,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-md-6" }, [
             _c("div", { staticClass: "form-group row" }, [
-              _c(
-                "label",
-                {
-                  staticClass: "col-md-4 col-form-label",
-                  attrs: { for: "pdob" }
-                },
-                [_vm._v("Patient's Date of Birth")]
-              ),
+              _vm._m(2),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-8" }, [
                 _c("input", {
@@ -40727,14 +40783,7 @@ var render = function() {
         _c("div", { staticClass: "row" }, [
           _c("div", { staticClass: "col-md-6" }, [
             _c("div", { staticClass: "form-group row" }, [
-              _c(
-                "label",
-                {
-                  staticClass: "col-md-4 col-form-label",
-                  attrs: { for: "pcell" }
-                },
-                [_vm._v("Telephone (Cell)")]
-              ),
+              _vm._m(3),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-8" }, [
                 _c("input", {
@@ -40784,7 +40833,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { type: "text", id: "pother", required: "" },
+                  attrs: { type: "text", id: "pother" },
                   domProps: { value: _vm.pother },
                   on: {
                     input: function($event) {
@@ -40801,14 +40850,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            {
-              staticClass: "col-md-2 col-form-label",
-              attrs: { for: "pemail" }
-            },
-            [_vm._v("Email")]
-          ),
+          _vm._m(4),
           _vm._v(" "),
           _c("div", { staticClass: "col-md-10" }, [
             _c("input", {
@@ -40836,14 +40878,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "form-group row" }, [
-          _c(
-            "label",
-            {
-              staticClass: "col-md-2 col-form-label",
-              attrs: { for: "paddress" }
-            },
-            [_vm._v("Address")]
-          ),
+          _vm._m(5),
           _vm._v(" "),
           _c("div", { staticClass: "col-md-10" }, [
             _c("input", {
@@ -40873,14 +40908,7 @@ var render = function() {
         _c("div", { staticClass: "row" }, [
           _c("div", { staticClass: "col-md-4" }, [
             _c("div", { staticClass: "form-group row" }, [
-              _c(
-                "label",
-                {
-                  staticClass: "col-md-6 col-form-label",
-                  attrs: { for: "pcity" }
-                },
-                [_vm._v("City")]
-              ),
+              _vm._m(6),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-6" }, [
                 _c("input", {
@@ -40910,14 +40938,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-md-4" }, [
             _c("div", { staticClass: "form-group row" }, [
-              _c(
-                "label",
-                {
-                  staticClass: "col-md-6 col-form-label",
-                  attrs: { for: "pstate" }
-                },
-                [_vm._v("State")]
-              ),
+              _vm._m(7),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-6" }, [
                 _c("input", {
@@ -40947,14 +40968,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-md-4" }, [
             _c("div", { staticClass: "form-group row" }, [
-              _c(
-                "label",
-                {
-                  staticClass: "col-md-6 col-form-label",
-                  attrs: { for: "pzip" }
-                },
-                [_vm._v("Zip")]
-              ),
+              _vm._m(8),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-6" }, [
                 _c("input", {
@@ -40984,7 +40998,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "form-group row" }, [
-          _vm._m(0),
+          _vm._m(9),
           _vm._v(" "),
           _c("div", { staticClass: "col-md-10" }, [
             _c("input", {
@@ -42650,6 +42664,120 @@ var render = function() {
           2
         ),
         _vm._v(" "),
+        _vm.isadmin
+          ? [
+              _c("hr"),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group" },
+                [
+                  _c("label", [_vm._v("Hormones")]),
+                  _vm._v(" "),
+                  _c("v-select", {
+                    staticClass: "searchinput",
+                    attrs: {
+                      placeholder: "Hormones",
+                      multiple: "",
+                      options: _vm.hormones,
+                      getOptionLabel: _vm.getOptionLabel,
+                      getOptionKey: _vm.getOptionKey
+                    },
+                    model: {
+                      value: _vm.selectedHormones,
+                      callback: function($$v) {
+                        _vm.selectedHormones = $$v
+                      },
+                      expression: "selectedHormones"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group" },
+                [
+                  _c("label", [_vm._v("Chemical Composition")]),
+                  _vm._v(" "),
+                  _c("v-select", {
+                    staticClass: "searchinput",
+                    attrs: {
+                      placeholder: "Chemical Composition",
+                      multiple: "",
+                      options: _vm.chemicalComposition,
+                      getOptionLabel: _vm.getOptionLabel,
+                      getOptionKey: _vm.getOptionKey
+                    },
+                    model: {
+                      value: _vm.selectedChemicalComposition,
+                      callback: function($$v) {
+                        _vm.selectedChemicalComposition = $$v
+                      },
+                      expression: "selectedChemicalComposition"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group" },
+                [
+                  _c("label", [_vm._v("Pharmacology")]),
+                  _vm._v(" "),
+                  _c("v-select", {
+                    staticClass: "searchinput",
+                    attrs: {
+                      placeholder: "Pharmacology",
+                      multiple: "",
+                      options: _vm.pharmacology,
+                      getOptionLabel: _vm.getOptionLabel,
+                      getOptionKey: _vm.getOptionKey
+                    },
+                    model: {
+                      value: _vm.selectedPharmacology,
+                      callback: function($$v) {
+                        _vm.selectedPharmacology = $$v
+                      },
+                      expression: "selectedPharmacology"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group" },
+                [
+                  _c("label", [_vm._v("Antibiotic Strains")]),
+                  _vm._v(" "),
+                  _c("v-select", {
+                    staticClass: "searchinput",
+                    attrs: {
+                      placeholder: "Antibiotic Strains",
+                      multiple: "",
+                      options: _vm.antibioticStrains,
+                      getOptionLabel: _vm.getOptionLabel,
+                      getOptionKey: _vm.getOptionKey
+                    },
+                    model: {
+                      value: _vm.selectedAntibioticStrains,
+                      callback: function($$v) {
+                        _vm.selectedAntibioticStrains = $$v
+                      },
+                      expression: "selectedAntibioticStrains"
+                    }
+                  })
+                ],
+                1
+              )
+            ]
+          : _vm._e(),
+        _vm._v(" "),
         _c("div", { staticClass: "form-group btn-submit" }, [
           _c(
             "button",
@@ -42660,11 +42788,129 @@ var render = function() {
             [_vm._v("Submit")]
           )
         ])
-      ]
+      ],
+      2
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "col-md-2 col-form-label", attrs: { for: "plname" } },
+      [
+        _vm._v("Patient's Last Name "),
+        _c("span", { staticClass: "required-asterik" }, [_vm._v("*")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "col-md-2 col-form-label", attrs: { for: "pfname" } },
+      [
+        _vm._v("Patient's First Name "),
+        _c("span", { staticClass: "required-asterik" }, [_vm._v("*")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "col-md-4 col-form-label", attrs: { for: "pdob" } },
+      [
+        _vm._v("Patient's Birth Date "),
+        _c("span", { staticClass: "required-asterik" }, [_vm._v("*")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "col-md-4 col-form-label", attrs: { for: "pcell" } },
+      [
+        _vm._v("Telephone (Cell) "),
+        _c("span", { staticClass: "required-asterik" }, [_vm._v("*")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "col-md-2 col-form-label", attrs: { for: "pemail" } },
+      [
+        _vm._v("Email "),
+        _c("span", { staticClass: "required-asterik" }, [_vm._v("*")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "col-md-2 col-form-label", attrs: { for: "paddress" } },
+      [
+        _vm._v("Address "),
+        _c("span", { staticClass: "required-asterik" }, [_vm._v("*")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "col-md-6 col-form-label", attrs: { for: "pcity" } },
+      [
+        _vm._v("City "),
+        _c("span", { staticClass: "required-asterik" }, [_vm._v("*")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "col-md-6 col-form-label", attrs: { for: "pstate" } },
+      [
+        _vm._v("State "),
+        _c("span", { staticClass: "required-asterik" }, [_vm._v("*")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "col-md-6 col-form-label", attrs: { for: "pzip" } },
+      [
+        _vm._v("Zip "),
+        _c("span", { staticClass: "required-asterik" }, [_vm._v("*")])
+      ]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -56196,7 +56442,7 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-select */ "./node_modules/vue-select/dist/vue-select.js");
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vue_cool_lightbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-cool-lightbox */ "./node_modules/vue-cool-lightbox/dist/vue-cool-lightbox.esm.js");
+/* harmony import */ var vue_cool_lightbox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-cool-lightbox */ "./node_modules/vue-cool-lightbox/dist/vue-cool-lightbox.esm.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -56218,7 +56464,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 Vue.component("v-select", vue_select__WEBPACK_IMPORTED_MODULE_0___default.a);
-Vue.component("cool-lightbox", vue_cool_lightbox__WEBPACK_IMPORTED_MODULE_1__["default"]);
+Vue.component("cool-lightbox", vue_cool_lightbox__WEBPACK_IMPORTED_MODULE_2__["default"]);
 Vue.component("search-app", __webpack_require__(/*! ./components/SearchApp.vue */ "./resources/js/components/SearchApp.vue")["default"]);
 Vue.component("search-bar", __webpack_require__(/*! ./components/SearchBar.vue */ "./resources/js/components/SearchBar.vue")["default"]);
 Vue.component("search-results", __webpack_require__(/*! ./components/SearchResults.vue */ "./resources/js/components/SearchResults.vue")["default"]);
@@ -56804,8 +57050,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/ebryx/Sites/herb-management/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/ebryx/Sites/herb-management/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! E:\Sites\herb-management\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Sites\herb-management\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

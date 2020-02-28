@@ -30,13 +30,13 @@
     <h3 style="margin-bottom: 30px;">Patient Form</h3>
     <form class="form form-horizontal" @submit.prevent="newSubmission()">
       <div class="form-group row">
-        <label for="plname" class="col-md-2 col-form-label">Patient's Last Name</label>
+        <label for="plname" class="col-md-2 col-form-label">Patient's Last Name <span class="required-asterik">*</span></label>
         <div class="col-md-10">
           <input type="text" id="plname" v-model="plname" class="form-control" required />
         </div>
       </div>
       <div class="form-group row">
-        <label for="pfname" class="col-md-2 col-form-label">Patient's First Name</label>
+        <label for="pfname" class="col-md-2 col-form-label">Patient's First Name <span class="required-asterik">*</span></label>
         <div class="col-md-10">
           <input type="text" id="pfname" v-model="pfname" class="form-control" required />
         </div>
@@ -46,13 +46,13 @@
           <div class="form-group row">
             <label for="pmname" class="col-md-4 col-form-label">Middle Name</label>
             <div class="col-md-8">
-              <input type="text" id="pmname" v-model="pmname" class="form-control" required />
+              <input type="text" id="pmname" v-model="pmname" class="form-control" />
             </div>
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group row">
-            <label for="pdob" class="col-md-4 col-form-label">Patient's Date of Birth</label>
+            <label for="pdob" class="col-md-4 col-form-label">Patient's Birth Date <span class="required-asterik">*</span></label>
             <div class="col-md-8">
               <input type="date" id="pdob" v-model="pdob" class="form-control" required />
             </div>
@@ -62,7 +62,7 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group row">
-            <label for="pcell" class="col-md-4 col-form-label">Telephone (Cell)</label>
+            <label for="pcell" class="col-md-4 col-form-label">Telephone (Cell) <span class="required-asterik">*</span></label>
             <div class="col-md-8">
               <input type="text" id="pcell" v-model="pcell" class="form-control" required />
             </div>
@@ -72,19 +72,19 @@
           <div class="form-group row">
             <label for="pother" class="col-md-4 col-form-label">Telephone (Other)</label>
             <div class="col-md-8">
-              <input type="text" id="pother" v-model="pother" class="form-control" required />
+              <input type="text" id="pother" v-model="pother" class="form-control" />
             </div>
           </div>
         </div>
       </div>
       <div class="form-group row">
-        <label for="pemail" class="col-md-2 col-form-label">Email</label>
+        <label for="pemail" class="col-md-2 col-form-label">Email <span class="required-asterik">*</span></label>
         <div class="col-md-10">
           <input type="text" id="pemail" v-model="pemail" class="form-control" required />
         </div>
       </div>
       <div class="form-group row">
-        <label for="paddress" class="col-md-2 col-form-label">Address</label>
+        <label for="paddress" class="col-md-2 col-form-label">Address <span class="required-asterik">*</span></label>
         <div class="col-md-10">
           <input type="text" id="paddress" v-model="paddress" class="form-control" required />
         </div>
@@ -92,7 +92,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group row">
-            <label for="pcity" class="col-md-6 col-form-label">City</label>
+            <label for="pcity" class="col-md-6 col-form-label">City <span class="required-asterik">*</span></label>
             <div class="col-md-6">
               <input type="text" id="pcity" v-model="pcity" class="form-control" required />
             </div>
@@ -100,7 +100,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group row">
-            <label for="pstate" class="col-md-6 col-form-label">State</label>
+            <label for="pstate" class="col-md-6 col-form-label">State <span class="required-asterik">*</span></label>
             <div class="col-md-6">
               <input type="text" id="pstate" v-model="pstate" class="form-control" required />
             </div>
@@ -108,7 +108,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group row">
-            <label for="pzip" class="col-md-6 col-form-label">Zip</label>
+            <label for="pzip" class="col-md-6 col-form-label">Zip <span class="required-asterik">*</span></label>
             <div class="col-md-6">
               <input type="text" id="pzip" v-model="pzip" class="form-control" required />
             </div>
@@ -413,6 +413,57 @@
           </div>
         </div>
       </div>
+      <template v-if="isadmin">
+        <hr />
+        <div class="form-group">
+          <label>Hormones</label>
+          <v-select
+            placeholder="Hormones"
+            multiple
+            :options="hormones"
+            v-model="selectedHormones"
+            class="searchinput"
+            :getOptionLabel="getOptionLabel"
+            :getOptionKey="getOptionKey"
+          ></v-select>
+        </div>
+        <div class="form-group">
+          <label>Chemical Composition</label>
+          <v-select
+            placeholder="Chemical Composition"
+            multiple
+            :options="chemicalComposition"
+            v-model="selectedChemicalComposition"
+            class="searchinput"
+            :getOptionLabel="getOptionLabel"
+            :getOptionKey="getOptionKey"
+          ></v-select>
+        </div>
+        <div class="form-group">
+          <label>Pharmacology</label>
+          <v-select
+            placeholder="Pharmacology"
+            multiple
+            :options="pharmacology"
+            v-model="selectedPharmacology"
+            class="searchinput"
+            :getOptionLabel="getOptionLabel"
+            :getOptionKey="getOptionKey"
+          ></v-select>
+        </div>
+        <div class="form-group">
+          <label>Antibiotic Strains</label>
+          <v-select
+            placeholder="Antibiotic Strains"
+            multiple
+            :options="antibioticStrains"
+            v-model="selectedAntibioticStrains"
+            class="searchinput"
+            :getOptionLabel="getOptionLabel"
+            :getOptionKey="getOptionKey"
+          ></v-select>
+        </div>
+      </template>
       <div class="form-group btn-submit">
         <button :disabled="submitting" class="btn btn-primary btn-lg btn-block">Submit</button>
       </div>
@@ -424,7 +475,7 @@ import SearchResults from "./SearchResults";
 
 export default {
   components: { SearchResults },
-  props: ["signs", "groups"],
+  props: ["signs", "groups", "items", "isadmin"],
   data() {
     let overrides = {};
     if (typeof submissionForm !== "undefined") {
@@ -483,12 +534,21 @@ export default {
       q3: [],
       q4: [],
       q5: [],
+      selectedHormones: [],
+      selectedChemicalComposition: [],
+      selectedPharmacology: [],
+      selectedAntibioticStrains: [],
+      pharmacology: this.items.filter(item => item.type === "pharmacology"),
+      hormones: this.items.filter(item => item.type === "hormones"),
+      chemicalComposition: this.items.filter(item => item.type === "chemical_composition"),
+      antibioticStrains: this.items.filter(item => item.type === "antibiotic_strains"),
       submitting: false,
       editing: false,
       subId: false,
       sign_groups,
       sign_groups_values,
       sign_groups_form,
+      subId: null,
       ...overrides
     };
 
@@ -510,9 +570,15 @@ export default {
     }
   },
   methods: {
+    getOptionLabel(option) {
+      return option.value;
+    },
+    getOptionKey(option) {
+      return option.id;
+    },
     newSubmission() {
       if (confirm("Do you really want to submit your Patient Form?")) {
-        const { submitting, editing, subId, ...form } = this.$data;
+        const { submitting, editing, subId, pharmacology, hormones, chemicalComposition, antibioticStrains, ...form } = this.$data;
         let $p;
 
         this.submitting = true;
@@ -572,5 +638,8 @@ form {
 }
 .result {
   margin-bottom: 30px;
+}
+.required-asterik {
+  color: red;
 }
 </style>
