@@ -9,6 +9,8 @@
 </script>
 <?php
 $groups = [
+    'Cold and Flu',
+    'Pain / Arthritis',
     'Digestive Issues',
     'Respiratory',
     'Cardiovascular',
