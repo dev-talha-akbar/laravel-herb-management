@@ -23,14 +23,13 @@ class AdminSignsSymptomsCrudController extends CrudController
     {
         $this->crud->setModel('App\Models\AdminSignsSymptoms');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/adminsignssymptoms');
-        $this->crud->denyAccess(['create', 'update', 'show', 'delete']);
-        $this->crud->allowAccess(['list']);
+        $this->crud->denyAccess(['show']);
+        $this->crud->allowAccess(['list', 'create', 'update', 'delete']);
         $this->crud->setEntityNameStrings('Signs & Symptoms', 'Signs & Symptoms');
     }
 
     protected function setupListOperation()
     {
-        $this->crud->removeAllColumns();
 
         $this->crud->setColumns([
             [
@@ -39,22 +38,31 @@ class AdminSignsSymptomsCrudController extends CrudController
             ], [
                 'name' => 'group',
                 'label' => "Group",
-                'type' => 'signs-symptoms-group'
+                'type' => 'signs-symptoms-group',
             ],
         ]);
-        $this->crud->removeAllButtons();
+
     }
 
     protected function setupCreateOperation()
     {
         $this->crud->setValidation(AdminSignsSymptomsRequest::class);
 
-        // TODO: remove setFromDb() and manually define Fields
-        $this->crud->setFromDb();
+        $this->crud->addField([
+            'name' => 'name',
+            'label' => 'Name',
+        ]);
     }
 
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation {destroy as traitDestroy;}
+
+    function destroy($id)
+    {
+        return \App\Models\Item::where('id', $id)->delete();
     }
 }

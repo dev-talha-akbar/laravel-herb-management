@@ -56442,7 +56442,7 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-select */ "./node_modules/vue-select/dist/vue-select.js");
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vue_cool_lightbox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-cool-lightbox */ "./node_modules/vue-cool-lightbox/dist/vue-cool-lightbox.esm.js");
+/* harmony import */ var vue_cool_lightbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-cool-lightbox */ "./node_modules/vue-cool-lightbox/dist/vue-cool-lightbox.esm.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -56464,7 +56464,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 Vue.component("v-select", vue_select__WEBPACK_IMPORTED_MODULE_0___default.a);
-Vue.component("cool-lightbox", vue_cool_lightbox__WEBPACK_IMPORTED_MODULE_2__["default"]);
+Vue.component("cool-lightbox", vue_cool_lightbox__WEBPACK_IMPORTED_MODULE_1__["default"]);
 Vue.component("search-app", __webpack_require__(/*! ./components/SearchApp.vue */ "./resources/js/components/SearchApp.vue")["default"]);
 Vue.component("search-bar", __webpack_require__(/*! ./components/SearchBar.vue */ "./resources/js/components/SearchBar.vue")["default"]);
 Vue.component("search-results", __webpack_require__(/*! ./components/SearchResults.vue */ "./resources/js/components/SearchResults.vue")["default"]);
