@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class CreateSignsSymptomsView extends Migration
+class CreateChemicalCompositionsView extends Migration
 {
     /**
      * Run the migrations.
