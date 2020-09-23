@@ -1,276 +1,465 @@
 <template>
-    <div class="herb">
-        <h5 class="card-title">
-            {{ english_name }}
-            <span
-                v-if="!nameSearch && signs_symptoms_count"
-                class="badge badge-info"
-                >{{ signs_symptoms_count }} Signs Matched</span
-            >
-        </h5>
-        <div class="row">
-            <div class="col-12">
-                <table class="herbdetails table table-borderless table-sm">
-                    <tbody>
-                        <tr v-if="view_more">
-                            <th>English Name</th>
-                            <td>{{ english_name }}</td>
-                        </tr>
-                        <tr>
-                            <th>Chinese Name</th>
-                            <td>{{ chinese_name }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Pharmaceutical Name</th>
-                            <td>{{ pharmaceutical_name }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Literal Name</th>
-                            <td>{{ literal_name }}</td>
-                        </tr>
-                        <tr>
-                            <th>Signs / Symptoms</th>
-                            <td>
-                                <div style="position: relative; left: -5px">
-                                    <span
-                                        style="font-size: 0.9rem; margin-right: 5px;"
-                                        class="badge badge-info"
-                                        v-for="sign in matched_signs"
-                                        :key="sign"
-                                        >{{ sign }}</span
-                                    >
-                                    <span
-                                        style="font-size: 0.9rem; margin-right: 5px;"
-                                        class="badge badge-default"
-                                        v-for="sign in not_matched_signs"
-                                        :key="sign"
-                                        >{{ sign }}</span
-                                    >
-                                </div>
-                            </td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Category</th>
-                            <td>{{ categories }}</td>
-                        </tr>
-                        <tr>
-                            <th>Dosage</th>
-                            <td>
-                                {{ dosage_with_unit }} (Maximum:
-                                {{ max_dosage }}g)
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Administered</th>
-                            <td>{{ usage_label }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Formulas Found In</th>
-                            <td>
-                                {{
-                                    formulas
-                                        .map(formula => formula.english_name)
-                                        .join(", ")
-                                }}
-                            </td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Properties</th>
-                            <td>{{ properties }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Systems Affected</th>
-                            <td>{{ systems_affected }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Actions</th>
-                            <td>{{ actions }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Chemicial Composition</th>
-                            <td>{{ chemical_composition }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Pharmacology</th>
-                            <td>{{ pharmacology }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Antibiotic Strains</th>
-                            <td>{{ antibiotic_strains }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Hormones</th>
-                            <td>{{ hormones }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Herb-Herb Interaction</th>
-                            <td>{{ herb_herb_interaction }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Herb-Drug Interaction</th>
-                            <td>{{ herb_drug_interaction }}</td>
-                        </tr>
-                        <tr v-if="view_more">
-                            <th>Toxicity / Contraindications</th>
-                            <td>{{ toxicity_contraindications }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-12">
-                <div class="herbconstituents">
-                    <cool-lightbox
-                        :items="herbimages"
-                        :index="index"
-                        @close="index = null"
-                    />
-                    <div class="flex justify-content-end">
-                        <img
-                            @click="index = 0"
-                            width="280"
-                            :src="dropbox_herb_image"
-                        />
-                    </div>
-                    <div class="flex herbconstituentimages">
-                        <div
-                            class="constituent"
-                            v-for="(constituent,
-                            imageIndex) in dropbox_constituent_images"
-                            :key="constituent"
-                        >
-                            <img
-                                @click="index = imageIndex + 1"
-                                :src="constituent"
-                            />
-                        </div>
-                    </div>
+  <div class="herb">
+    <h5 class="card-title">
+      {{ english_name }}
+      <span
+        v-if="!nameSearch && signs_symptoms_count"
+        class="badge badge-info"
+      >{{ signs_symptoms_count }} Signs Matched</span>
+    </h5>
+    <div class="row">
+      <div class="col-12">
+        <table class="herbdetails table table-borderless table-sm">
+          <tbody>
+            <tr>
+              <th>Chinese Name</th>
+              <td>{{ chinese_name }}</td>
+            </tr>
+            <tr v-if="view_more">
+              <th>English Name</th>
+              <td>{{ english_name }}</td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Pharmaceutical Name</th>
+              <td>{{ pharmaceutical_name }}</td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Literal Name</th>
+              <td>{{ literal_name }}</td>
+            </tr>
+            <tr>
+              <th>Signs / Symptoms</th>
+              <td>
+                <div style="position: relative; left: -5px">
+                  <span
+                    style="font-size: 0.9rem; margin-right: 5px;"
+                    class="badge badge-info"
+                    v-for="sign in matched_signs"
+                    :key="sign"
+                  >{{ sign }}</span>
+                  <span v-if="view_more">
+                    <span
+                      style="font-size: 0.9rem; margin-right: 5px;"
+                      class="badge badge-default"
+                      v-for="sign in not_matched_signs"
+                      :key="sign"
+                    >{{ sign }}</span>
+                  </span>
                 </div>
+              </td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Category</th>
+              <td>{{ categories }}</td>
+            </tr>
+            <tr>
+              <th>Dosage</th>
+              <td>
+                {{ dosage_with_unit }} (Maximum:
+                {{ max_dosage }}g)
+              </td>
+            </tr>
+            <tr>
+              <th>Administered</th>
+              <td>{{ usage_label }}</td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Formulas Found In</th>
+              <td>
+                {{
+                formulas
+                .map(formula => `${formula.english_name} (${formula.chinese_name})`)
+                .join(", ")
+                }}
+              </td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Properties</th>
+              <td>{{ properties }}</td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Systems Affected</th>
+              <td>{{ systems_affected }}</td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Actions</th>
+              <td>{{ actions }}</td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Chemicial Composition</th>
+              <td>
+                <div style="position: relative; left: -5px">
+                  <span
+                    style="font-size: 0.9rem; margin-right: 5px;"
+                    class="badge badge-info"
+                    v-for="chemical in matched_chemicals"
+                    :key="chemical"
+                  >{{ chemical }}</span>
+                  <span>
+                    <span
+                      style="font-size: 0.9rem; margin-right: 5px;"
+                      class="badge badge-default"
+                      v-for="chemical in not_matched_chemicals"
+                      :key="chemical"
+                    >{{ chemical }}</span>
+                  </span>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Pharmacology</th>
+              <td>
+                <div style="position: relative; left: -5px">
+                  <span
+                    style="font-size: 0.9rem; margin-right: 5px;"
+                    class="badge badge-info"
+                    v-for="pharmacology in matched_pharmacology"
+                    :key="pharmacology"
+                  >{{ pharmacology }}</span>
+                  <span>
+                    <span
+                      style="font-size: 0.9rem; margin-right: 5px;"
+                      class="badge badge-default"
+                      v-for="pharmacology in not_matched_pharmacology"
+                      :key="pharmacology"
+                    >{{ pharmacology }}</span>
+                  </span>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Antibiotic Strains</th>
+              <td>
+                <div style="position: relative; left: -5px">
+                  <span
+                    style="font-size: 0.9rem; margin-right: 5px;"
+                    class="badge badge-info"
+                    v-for="antibiotic_strain in matched_antibiotic_strains"
+                    :key="antibiotic_strain"
+                  >{{ antibiotic_strain }}</span>
+                  <span>
+                    <span
+                      style="font-size: 0.9rem; margin-right: 5px;"
+                      class="badge badge-default"
+                      v-for="antibiotic_strain in not_matched_antibiotic_strains"
+                      :key="antibiotic_strain"
+                    >{{ antibiotic_strain }}</span>
+                  </span>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Hormones</th>
+              <td>
+                <div style="position: relative; left: -5px">
+                  <span
+                    style="font-size: 0.9rem; margin-right: 5px;"
+                    class="badge badge-info"
+                    v-for="hormone in matched_hormones"
+                    :key="hormone"
+                  >{{ hormone }}</span>
+                  <span>
+                    <span
+                      style="font-size: 0.9rem; margin-right: 5px;"
+                      class="badge badge-default"
+                      v-for="hormone in not_matched_hormones"
+                      :key="hormone"
+                    >{{ hormone }}</span>
+                  </span>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Herb-Herb Interaction</th>
+              <td>{{ herb_herb_interaction }}</td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Herb-Drug Interaction</th>
+              <td>{{ herb_drug_interaction }}</td>
+            </tr>
+            <tr v-if="view_more">
+              <th>Toxicity / Contraindications</th>
+              <td>{{ toxicity_contraindications }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-12">
+        <div class="herbconstituents">
+          <cool-lightbox :items="herbimages" :index="index" @close="index = null" />
+          <div class="flex justify-content-end">
+            <img @click="index = 0" width="280" :src="dropbox_herb_image" />
+          </div>
+          <div class="flex herbconstituentimages">
+            <div
+              class="constituent"
+              v-for="(constituent,
+                            imageIndex) in dropbox_constituent_images"
+              :key="constituent"
+            >
+              <img @click="index = imageIndex + 1" :src="constituent" />
             </div>
+          </div>
         </div>
-        <a href="javascript:void(0)" class="card-link" @click="viewToggle()"
-            >View {{ view_more ? "Less" : "More" }}</a
-        >
+      </div>
     </div>
+    <a
+      href="javascript:void(0)"
+      class="card-link"
+      @click="viewToggle()"
+    >View {{ view_more ? "Less" : "More" }}</a>
+  </div>
 </template>
 <script>
 export default {
-    props: ["data", "nameSearch", "selectedSigns"],
-    data() {
-        const getItemsOfType = type => {
-            return this.data.items
-                .filter(item => item.type === type)
-                .map(item => item.value)
-                .join(", ");
-        };
+  props: [
+    "data",
+    "nameSearch",
+    "selectedSigns",
+    "hormonesSelected",
+    "chemicalsSelected",
+    "pharmacologySelected",
+    "antibioticStrainsSelected"
+  ],
+  data() {
+    const getItemsOfType = type => {
+      return this.data.items
+        .filter(item => item.type === type)
+        .map(item => item.value)
+        .join(", ");
+    };
 
-        const getMatchedSigns = () => {
-            return this.data.items
-                .filter(
-                    item =>
-                        item.type === "signs_symptoms" &&
-                        this.selectedSigns
-                            .map(sign =>
-                                typeof sign === "string"
-                                    ? parseInt(sign, 10)
-                                    : sign.id
-                            )
-                            .indexOf(item.id) > -1
-                )
-                .map(item => item.value);
-        };
+    const getMatchedSigns = () => {
+      return this.data.items
+        .filter(
+          item =>
+            item.type === "signs_symptoms" &&
+            this.selectedSigns
+              .map(sign =>
+                typeof sign === "string" ? parseInt(sign, 10) : sign.id
+              )
+              .indexOf(item.id) > -1
+        )
+        .map(item => item.value);
+    };
 
-        const getNotMatchedSigns = () => {
-            return this.data.items
-                .filter(
-                    item =>
-                        item.type === "signs_symptoms" &&
-                        this.selectedSigns
-                            .map(sign =>
-                                typeof sign === "string"
-                                    ? parseInt(sign, 10)
-                                    : sign.id
-                            )
-                            .indexOf(item.id) === -1
-                )
-                .map(item => item.value);
-        };
+    const getNotMatchedSigns = () => {
+      return this.data.items
+        .filter(
+          item =>
+            item.type === "signs_symptoms" &&
+            this.selectedSigns
+              .map(sign =>
+                typeof sign === "string" ? parseInt(sign, 10) : sign.id
+              )
+              .indexOf(item.id) === -1
+        )
+        .map(item => item.value);
+    };
 
-        return {
-            signs_symptoms_count: getMatchedSigns().length,
-            ...this.data,
-            categories: getItemsOfType("categories"),
-            matched_signs: getMatchedSigns(),
-            not_matched_signs: getNotMatchedSigns(),
-            properties: getItemsOfType("properties"),
-            systems_affected: getItemsOfType("systems_affected"),
-            actions: getItemsOfType("actions"),
-            chemical_composition: getItemsOfType("chemical_composition"),
-            pharmacology: getItemsOfType("pharmacology"),
-            antibiotic_strains: getItemsOfType("antibiotic_strains"),
-            hormones: getItemsOfType("hormones"),
-            herb_herb_interaction: getItemsOfType("herb_herb_interaction"),
-            herb_drug_interaction: getItemsOfType("herb_drug_interaction"),
-            toxicity_contraindications: getItemsOfType(
-                "toxicity_contraindications"
-            ),
-            usage_label:
-                this.data.usage !== null
-                    ? this.data.usage == "0"
-                        ? "Both Orally and Topically"
-                        : this.data.usage == "1"
-                        ? "Orally"
-                        : this.data.usage == "2"
-                        ? "Topically"
-                        : "Not Known"
-                    : "Not Known",
-            view_more: false,
-            index: null
-        };
-    },
-    mounted() {
-        console.log("Component mounted.");
-    },
-    computed: {
-        herbimages() {
-            return [
-                this.dropbox_herb_image,
-                ...this.dropbox_constituent_images
-            ];
-        }
-    },
-    methods: {
-        viewToggle() {
-            this.view_more = !this.view_more;
-        }
+    const getMatchedHormones = () => {
+      if (!this.hormonesSelected) {
+        return [];
+      }
+
+      return this.data.items
+        .filter(item => {
+          return (
+            item.type === "hormones" &&
+            this.hormonesSelected.indexOf(item.id) > -1
+          );
+        })
+        .map(item => item.value);
+    };
+
+    const getNotMatchedHormones = () => {
+      if (!this.hormonesSelected) {
+        return this.data.items
+          .filter(item => item.type === "hormones")
+          .map(item => item.value);
+      }
+
+      return this.data.items
+        .filter(
+          item =>
+            item.type === "hormones" &&
+            this.hormonesSelected.indexOf(item.id) === -1
+        )
+        .map(item => item.value);
+    };
+
+    const getMatchedChemicals = () => {
+      if (!this.chemicalsSelected) {
+        return [];
+      }
+
+      return this.data.items
+        .filter(item => {
+          return (
+            item.type === "chemical_composition" &&
+            this.chemicalsSelected.indexOf(item.id) > -1
+          );
+        })
+        .map(item => item.value);
+    };
+
+    const getNotMatchedChemicals = () => {
+      if (!this.chemicalsSelected) {
+        return this.data.items
+          .filter(item => item.type === "chemical_composition")
+          .map(item => item.value);
+      }
+
+      return this.data.items
+        .filter(
+          item =>
+            item.type === "chemical_composition" &&
+            this.chemicalsSelected.indexOf(item.id) === -1
+        )
+        .map(item => item.value);
+    };
+
+    const getMatchedPharmacology = () => {
+      if (!this.pharmacologySelected) {
+        return [];
+      }
+
+      return this.data.items
+        .filter(item => {
+          return (
+            item.type === "pharmacology" &&
+            this.pharmacologySelected.indexOf(item.id) > -1
+          );
+        })
+        .map(item => item.value);
+    };
+
+    const getNotMatchedPharmacology = () => {
+      if (!this.pharmacologySelected) {
+        return this.data.items
+          .filter(item => item.type === "pharmacology")
+          .map(item => item.value);
+      }
+
+      return this.data.items
+        .filter(
+          item =>
+            item.type === "pharmacology" &&
+            this.pharmacologySelected.indexOf(item.id) === -1
+        )
+        .map(item => item.value);
+    };
+
+    const getMatchedAntibioticStrains = () => {
+      if (!this.antibioticStrainsSelected) {
+        return [];
+      }
+
+      return this.data.items
+        .filter(item => {
+          return (
+            item.type === "antibiotic_strains" &&
+            this.antibioticStrainsSelected.indexOf(item.id) > -1
+          );
+        })
+        .map(item => item.value);
+    };
+
+    const getNotMatchedAntibioticStrains = () => {
+      if (!this.antibioticStrainsSelected) {
+        return this.data.items
+          .filter(item => item.type === "antibiotic_strains")
+          .map(item => item.value);
+      }
+
+      return this.data.items
+        .filter(
+          item =>
+            item.type === "antibiotic_strains" &&
+            this.antibioticStrainsSelected.indexOf(item.id) === -1
+        )
+        .map(item => item.value);
+    };
+
+    return {
+      signs_symptoms_count: getMatchedSigns().length,
+      ...this.data,
+      categories: getItemsOfType("categories"),
+      matched_signs: getMatchedSigns(),
+      not_matched_signs: getNotMatchedSigns(),
+      matched_hormones: getMatchedHormones(),
+      not_matched_hormones: getNotMatchedHormones(),
+      matched_chemicals: getMatchedChemicals(),
+      not_matched_chemicals: getNotMatchedChemicals(),
+      matched_pharmacology: getMatchedPharmacology(),
+      not_matched_pharmacology: getNotMatchedPharmacology(),
+      matched_antibiotic_strains: getMatchedAntibioticStrains(),
+      not_matched_antibiotic_strains: getNotMatchedAntibioticStrains(),
+      properties: getItemsOfType("properties"),
+      systems_affected: getItemsOfType("systems_affected"),
+      actions: getItemsOfType("actions"),
+      chemical_composition: getItemsOfType("chemical_composition"),
+      pharmacology: getItemsOfType("pharmacology"),
+      antibiotic_strains: getItemsOfType("antibiotic_strains"),
+      hormones: getItemsOfType("hormones"),
+      herb_herb_interaction: getItemsOfType("herb_herb_interaction"),
+      herb_drug_interaction: getItemsOfType("herb_drug_interaction"),
+      toxicity_contraindications: getItemsOfType("toxicity_contraindications"),
+      usage_label:
+        this.data.usage !== null
+          ? this.data.usage == "0"
+            ? "Both Orally and Topically"
+            : this.data.usage == "1"
+            ? "Orally"
+            : this.data.usage == "2"
+            ? "Topically"
+            : "Not Known"
+          : "Not Known",
+      view_more: false,
+      index: null
+    };
+  },
+  mounted() {
+    console.log("Component mounted.");
+  },
+  computed: {
+    herbimages() {
+      return [this.dropbox_herb_image, ...this.dropbox_constituent_images];
     }
+  },
+  methods: {
+    viewToggle() {
+      this.view_more = !this.view_more;
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .herb {
-    .herbdetails {
-        margin-left: -5px;
+  .herbdetails {
+    margin-left: -5px;
+  }
+  .formulatag {
+    font-weight: normal;
+    position: relative;
+    top: -1px;
+  }
+  .herbconstituents {
+    margin-top: 5px;
+    .herbconstituentimages {
+      margin: 0 -4px;
+      display: flex;
+      flex-wrap: wrap;
     }
-    .formulatag {
-        font-weight: normal;
-        position: relative;
-        top: -1px;
+  }
+  .constituent {
+    img {
+      width: 140px;
+      height: 140px;
     }
-    .herbconstituents {
-        margin-top: 5px;
-        .herbconstituentimages {
-            margin: 0 -4px;
-            display: flex;
-            flex-wrap: wrap;
-        }
-    }
-    .constituent {
-        img {
-            width: 140px;
-            height: 140px;
-        }
 
-        margin: 4px;
-    }
+    margin: 4px;
+  }
 }
 </style>

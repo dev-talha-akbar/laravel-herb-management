@@ -24,7 +24,22 @@ $groups = [
     'General',
     'Musculoskeletal',
     'Men Only',
-    'Women Only'
+    'Women Only',
+    'Known Diagnosis',
+    'Mouth/Tongue',
+    'Body Temperature',
+    'Known Deficiencies',
+    'Side Affects From Medication',
+    'Injuries/Post Surgical',
+    'Ears/Eyes',
+    'Dental/Mouth',
+    'Sweating Disorders',
+    'Edema/Skin Problems',
+    'Headaches',
+    'Abdominal Issues',
+    'Turn Emotional into Emotional/Sleep',
+    'Allergies',
+    'Body Temperature'
 ];
 ?>
 <select id="group-select-<?php echo $entry->id; ?>" class="form-control" onchange="onGroupChange<?php echo $entry->id; ?>()">

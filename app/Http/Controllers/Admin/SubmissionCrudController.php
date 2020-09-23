@@ -24,9 +24,10 @@ class SubmissionCrudController extends CrudController
         $this->crud->setModel('App\Models\Submission');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/submission');
         $this->crud->setEntityNameStrings('submission', 'submissions');
-        $this->crud->denyAccess(['create', 'update', 'show', 'delete']);
-        $this->crud->allowAccess(['list']);
+        $this->crud->denyAccess(['create', 'update', 'show']);
+        $this->crud->allowAccess(['list', 'delete']);
         $this->crud->addButtonFromView('line', 'view', 'submission-view', 'end');
+        $this->crud->addButtonFromView('line', 'download', 'submission-download', 'end');
     }
 
     protected function setupListOperation()
@@ -37,6 +38,10 @@ class SubmissionCrudController extends CrudController
             [
                 'name' => 'name',
                 'label' => "Patient Name",
+            ],
+            [
+                'name' => 'created_at',
+                'label' => "Submitted At",
             ]
         ]);
     }

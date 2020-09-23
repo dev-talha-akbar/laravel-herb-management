@@ -15,6 +15,7 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/submission/{id}', 'HomeController@submission');
+Route::get('/submission_download/{id}', 'HomeController@submission_download');
 Route::get('/options', 'HomeController@options');
 Route::post('/search', 'HomeController@search');
 Route::post('/submit', 'HomeController@submit');

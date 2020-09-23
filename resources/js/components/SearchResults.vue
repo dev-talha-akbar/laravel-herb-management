@@ -24,6 +24,10 @@
             <div class="card-body">
               <herb
                 :selectedSigns="selectedSigns"
+                :hormonesSelected="hormonesSelected"
+                :chemicalsSelected="chemicalsSelected"
+                :pharmacologySelected="pharmacologySelected"
+                :antibioticStrainsSelected="antibioticStrainsSelected"
                 v-if="type === 'Herb'"
                 :data="result"
                 :nameSearch="nameSearch"
@@ -73,9 +77,14 @@ export default {
     "type",
     "nameSearch",
     "selectedSigns",
+    "hormonesSelected",
+    "chemicalsSelected",
+    "pharmacologySelected",
+    "antibioticStrainsSelected",
     "smallNoResults"
   ],
   mounted() {
+    console.log(this.selectedSigns);
     console.log("Component mounted.");
   },
   components: { ZoomCenterTransition, FadeTransition }

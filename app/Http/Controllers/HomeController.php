@@ -8,6 +8,8 @@ use App\Models\Item;
 use App\Models\Submission;
 use DB;
 use Illuminate\Http\Request;
+use PDF;
+use \stdClass;
 
 class HomeController extends Controller
 {
@@ -46,6 +48,113 @@ class HomeController extends Controller
         }
 
         return view('welcome')->with('submission', $submission)->with('is_admin', $is_admin);
+    }
+
+    private function recursive_unset(&$array, $unwanted_key) {
+        if(is_array($array)) {
+            unset($array[$unwanted_key]);
+            foreach ($array as &$value) {
+                if (is_array($value) || is_object($value)) {
+                    $this->recursive_unset($value, $unwanted_key);
+                }
+            }
+        } else if (is_object($array)) {
+            unset($array->$unwanted_key);
+            foreach ($array as $key => &$value) {
+                if (is_array($value) || is_object($value)) {
+                    $this->recursive_unset($value, $unwanted_key);
+                }
+            }
+        }
+    }
+
+    public function submission_download($id)
+    {
+        set_time_limit(300);
+        $submission = Submission::findOrFail($id);
+        $user = \Auth::user();
+
+        if ($user) {
+            $is_admin = $user->hasRole('Admin') || $user->hasRole('Super Admin');
+        } else {
+            $is_admin = false;
+        }
+
+        $form = json_decode($submission->form);
+        $patientName = "$form->pfname $form->pmname $form->plname";
+        $submittedAt = $submission->created_at;
+
+        $results = json_decode($submission->result);
+        
+        $herbs = $results->herbs;
+        $herbs = array_slice($herbs, 0, 10);
+        $this->recursive_unset($herbs, "created_at");
+        $this->recursive_unset($herbs, "updated_at");
+        $this->recursive_unset($herbs, "pivot");
+
+
+        $herb_formulas = $results->herb_formulas;
+        $herb_formulas = array_slice($herb_formulas, 0, 10);
+        $this->recursive_unset($herb_formulas, "created_at");
+        $this->recursive_unset($herb_formulas, "updated_at");
+        $this->recursive_unset($herb_formulas, "pivot");
+        $this->recursive_unset($herb_formulas, "dropbox_herb_image");
+        $this->recursive_unset($herb_formulas, "herb_image");
+        $this->recursive_unset($herb_formulas, "dropbox_constituent_images");
+
+        for ($i=0; $i < count($herb_formulas); $i++) { 
+            $items = $herb_formulas[$i]->items;
+
+            $herb_formulas[$i]->signs_symptoms = "";
+            $herb_formulas[$i]->categories = "";
+            $herb_formulas[$i]->formula_diagnosis = "";
+            $herb_formulas[$i]->tongue_diagnosis = "";
+            $herb_formulas[$i]->pulse_diagnosis = "";
+            $herb_formulas[$i]->formula_actions = "";
+            $herb_formulas[$i]->herb_drug_interaction = "";
+            $herb_formulas[$i]->toxicity_contraindications = "";
+
+            foreach ($items as $item) {
+
+                if($item->type =="signs_symptoms"){
+                    $herb_formulas[$i]->signs_symptoms .= $item->value.", ";
+                } else if($item->type =="categories"){
+                    $herb_formulas[$i]->categories .= $item->value.", ";
+                } else if($item->type =="formula_diagnosis"){
+                    $herb_formulas[$i]->formula_diagnosis .= $item->value.", ";
+                } else if($item->type =="tongue_diagnosis"){
+                    $herb_formulas[$i]->tongue_diagnosis .= $item->value.", ";
+                } else if($item->type =="pulse_diagnosis"){
+                    $herb_formulas[$i]->pulse_diagnosis .= $item->value.", ";
+                } else if($item->type =="formula_actions"){
+                    $herb_formulas[$i]->formula_actions .= $item->value.", ";
+                } else if($item->type =="herb_drug_interaction"){
+                    $herb_formulas[$i]->herb_drug_interaction .= $item->value.", ";
+                } else if($item->type =="toxicity_contraindications"){
+                    $herb_formulas[$i]->toxicity_contraindications .= $item->value.", ";
+                }
+            }
+
+            $herb_formulas[$i]->herbs_used = "";
+            foreach ($herb_formulas[$i]->herbs as $herbUsed) {
+                $herb_formulas[$i]->herbs_used .= "$herbUsed->chinese_name ($herbUsed->english_name) $herbUsed->dosage_with_unit";
+            }
+        }
+        $this->recursive_unset($herb_formulas, "items");
+        $this->recursive_unset($herb_formulas, "herbs");
+        // echo "<pre>";
+        // print_r($herb_formulas);
+        // echo "</pre>";
+        // return view('submission_download')->with('herbs', $herbs)->with('herb_formulas', $herb_formulas);
+        $data = [
+            "herbs" => $herbs,
+            "herb_formulas" => $herb_formulas,
+            "patientName" => $patientName,
+            "submittedAt" => $submittedAt
+        ];
+        $pdf = PDF::loadView('submission_download', $data);
+        return $pdf->download('Submission.pdf');
+
     }
 
     /**

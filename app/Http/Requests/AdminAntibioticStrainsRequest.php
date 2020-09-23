@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
-class HerbRequest extends FormRequest
+class AdminAntibioticStrainsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +26,7 @@ class HerbRequest extends FormRequest
     public function rules()
     {
         return [
-            'chinese_name' => 'required|max:191',
-            'english_name' => 'required|max:191',
-            'literal_name' => 'max:191',
-            'pharmaceutical_name' => 'required|max:191',
-            'dosage' => 'required'
+            // 'name' => 'required|min:5|max:255'
         ];
     }
 

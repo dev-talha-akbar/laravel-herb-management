@@ -17,4 +17,13 @@ Route::group([
     Route::crud('submission', 'SubmissionCrudController');
     Route::crud('adminsignssymptoms', 'AdminSignsSymptomsCrudController');
     Route::crud('adminchemicalcompositions', 'AdminChemicalCompositionsCrudController');
+    Route::crud('adminproperties', 'AdminPropertiesCrudController');
+    Route::crud('adminsystemsaffected', 'AdminSystemsAffectedCrudController');
+    Route::crud('adminactions', 'AdminActionsCrudController');
+    Route::crud('adminpharmacology', 'AdminPharmacologyCrudController');
+    Route::crud('adminantibioticstrains', 'AdminAntibioticStrainsCrudController');
+    Route::crud('adminhormones', 'AdminHormonesCrudController');
+    Route::crud('adminherbherbinteraction', 'AdminHerbHerbInteractionCrudController');
+    Route::crud('adminherbdruginteraction', 'AdminHerbDrugInteractionCrudController');
+    Route::crud('admintoxicitycontraindications', 'AdminToxicityContraindicationsCrudController');
 }); // this should be the absolute last line of this file

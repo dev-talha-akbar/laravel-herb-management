@@ -1,0 +1,1 @@
+<a href="{{ url('/submission_download/' . $entry->id) }} " target="_blank" class="btn btn-xs btn-default"> Download</a>

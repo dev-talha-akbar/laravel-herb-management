@@ -7,4 +7,13 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('herb-formula') }}'><i class='nav-icon fa fa-flask'></i> Herb Formulas</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminsignssymptoms') }}'><i class='nav-icon fa fa-hand-pointer-o'></i> Signs & Symptoms</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminchemicalcompositions') }}'><i class='nav-icon fa fa-flask'></i> Chemical Compositions</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminproperties') }}'><i class='nav-icon fa fa-flask'></i> Properties</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminsystemsaffected') }}'><i class='nav-icon fa fa-flask'></i> Systems affected</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminactions') }}'><i class='nav-icon fa fa-flask'></i> Actions</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminpharmacology') }}'><i class='nav-icon fa fa-flask'></i> Pharmacology</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminantibioticstrains') }}'><i class='nav-icon fa fa-flask'></i> Antibiotic Strains</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminhormones') }}'><i class='nav-icon fa fa-flask'></i> Hormones</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminherbherbinteraction') }}'><i class='nav-icon fa fa-leaf'></i> Herb-Herb interaction</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('adminherbdruginteraction') }}'><i class='nav-icon fa fa-leaf'></i> Herb-Drug interaction</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('admintoxicitycontraindications') }}'><i class='nav-icon fa fa-flask'></i> Toxicity / Contraindications</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('submission') }}'><i class='nav-icon fa fa-file-text'></i> Submissions</a></li>
