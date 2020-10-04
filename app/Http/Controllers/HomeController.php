@@ -84,7 +84,9 @@ class HomeController extends Controller
         $patientName = "$form->pfname $form->pmname $form->plname";
         $submittedAt = $submission->created_at;
 
-        $results = json_decode($submission->result);
+        $sign_ids = json_decode($submission->result);
+        $res = json_encode($this->searchForSigns($sign_ids));
+        $results = json_decode($res);
         
         $herbs = $results->herbs;
         $herbs = array_slice($herbs, 0, 10);
@@ -193,9 +195,13 @@ class HomeController extends Controller
 
     public function submit(Request $request)
     {
-        $result = $this->searchForSigns($request->signsSelected);
+        // $result = $this->searchForSigns($request->signsSelected);
 
-        $submission = Submission::create(['form' => $request->form, 'result' => json_encode($result), 'name' => $request->name, 'status' => 1]);
+        // $this->recursive_unset($result, "created_at");
+        // $this->recursive_unset($result, "updated_at");
+        // $this->recursive_unset($result, "pivot");
+
+        $submission = Submission::create(['form' => $request->form, 'result' => json_encode($request->signsSelected), 'name' => $request->name, 'status' => 1]);
         \Session::flash('success', 'We have received your submission successfully!');
         return response()->json($submission->id);
     }
@@ -204,11 +210,11 @@ class HomeController extends Controller
     {
         $submission = Submission::findOrFail($id);
 
-        $result = $this->searchForSigns($request->signsSelected);
+        // $result = $this->searchForSigns($request->signsSelected);
 
         $submission->update([
             'form' => $request->form,
-            'result' => json_encode($result),
+            'result' => json_encode($request->signsSelected),
             'name' => $request->name,
         ]);
 
@@ -233,6 +239,18 @@ class HomeController extends Controller
             'herbs' => $herb_results,
             'herb_formulas' => $herb_formula_results,
         ];
+    }
+
+    public function getSignResults($sign_ids) {
+        $sign_ids = json_decode($sign_ids);
+
+        $result = $this->searchForSigns($sign_ids);
+
+        $this->recursive_unset($result, "created_at");
+        $this->recursive_unset($result, "updated_at");
+        $this->recursive_unset($result, "pivot");
+
+        return response()->json($result);
     }
 
     /**
