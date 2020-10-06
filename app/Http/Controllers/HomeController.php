@@ -227,13 +227,13 @@ class HomeController extends Controller
             $q->whereIn('id', $signs);
         }])->whereHas('signs_symptoms', function ($q) use ($signs) {
             $q->whereIn('id', $signs);
-        })->orderBy('signs_symptoms_count', 'desc')->with('formulas')->with('items')->get();
+        })->orderBy('signs_symptoms_count', 'desc')->with('formulas')->with('items')->take(5)->get();
 
         $herb_formula_results = HerbFormula::withCount(['signs_symptoms' => function ($q) use ($signs) {
             $q->whereIn('id', $signs);
         }])->whereHas('signs_symptoms', function ($q) use ($signs) {
             $q->whereIn('id', $signs);
-        })->orderBy('signs_symptoms_count', 'desc')->with('herbs')->with('items')->get();
+        })->orderBy('signs_symptoms_count', 'desc')->with('herbs')->with('items')->take(5)->get();
 
         return [
             'herbs' => $herb_results,
@@ -245,10 +245,6 @@ class HomeController extends Controller
         $sign_ids = json_decode($sign_ids);
 
         $result = $this->searchForSigns($sign_ids);
-
-        $this->recursive_unset($result, "created_at");
-        $this->recursive_unset($result, "updated_at");
-        $this->recursive_unset($result, "pivot");
 
         return response()->json($result);
     }
